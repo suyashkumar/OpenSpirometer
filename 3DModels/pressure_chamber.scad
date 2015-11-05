@@ -1,16 +1,11 @@
-high_quality=true;
+//high_quality=true;
 bottom_cyl_dia=15; // mm
 bottom_cyl_height=5;
 top_cyl_dia=10;
 top_cyl_height=5;
 screen_cutout=4;
 screw_dia=1;
-if(high_quality){
-    $fn=150;
-}
-else{
-    $fn=50;
-}
+$fn=150;
 
 module makeBottom(){
     cylinder(r=bottom_cyl_dia, h=bottom_cyl_height);
