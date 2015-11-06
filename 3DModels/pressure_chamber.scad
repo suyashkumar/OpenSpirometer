@@ -5,7 +5,8 @@ top_cyl_dia=10;
 top_cyl_height=5;
 screen_cutout=4;
 screw_dia=1;
-$fn=150;
+pressure_tube_dia=2;
+$fn=50;
 
 module makeBottom(){
     cylinder(r=bottom_cyl_dia, h=bottom_cyl_height);
@@ -28,6 +29,7 @@ module cutHoles(){
         translate([0,-13,0]) cylinder(r=screw_dia,h=bottom_cyl_height);
         translate([13,0,0]) cylinder(r=screw_dia,h=bottom_cyl_height);
         translate([-13,0,0]) cylinder(r=screw_dia,h=bottom_cyl_height);
+        translate([0,0,bottom_cyl_height+top_cyl_height/2])rotate([90,0,0])cylinder(r=pressure_tube_dia/2,h=10);
     }
 }
 module makeHalfChamber(){
@@ -47,3 +49,4 @@ module makeShowModel(spaced, spacing=2.5){
 }
 
 makeShowModel(spaced=true);
+//makeHalfChamber();
