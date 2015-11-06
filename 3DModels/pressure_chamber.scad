@@ -6,7 +6,7 @@ top_cyl_height=5;
 screen_cutout=4;
 screw_dia=1;
 pressure_tube_dia=2;
-$fn=50;
+$fn=150;
 
 module makeBottom(){
     cylinder(r=bottom_cyl_dia, h=bottom_cyl_height);
