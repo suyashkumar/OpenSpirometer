@@ -38,7 +38,22 @@ public class RecordActivity extends AppCompatActivity {
     }
 
     public void toResults(View view) {
+        //get data over bluetooth
+        byte[] m={0, 1, 2, 3, 4};
+        int k = 500; //calibration constant
+        int FVC=0;
+        int FEV=0;
+        for (int i=0; i<m.length; i++){
+            int v = m[i]*5/1024;
+            FVC += v*0.02;
+            if(i<400){
+                FEV+=v*0.02;
+            }
+        }
+        FEV = FEV*k;
+
         Intent intent = new Intent(getApplicationContext(), ResultsActivity.class);
         startActivity(intent);
     }
+
 }

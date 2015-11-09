@@ -22,8 +22,6 @@
   
   float Vi[10];
   float Vi_avg;
-  float K_pos = 961;    //change after cal
-  float K_neg = 811;    //change after cal
   byte buffer[400];
   int threshold = 10; //change this (0-255)
   int doneLength = 10; //change this (num samples of 0 = done)

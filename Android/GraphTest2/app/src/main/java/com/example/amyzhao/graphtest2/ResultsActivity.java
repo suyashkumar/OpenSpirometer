@@ -9,12 +9,36 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.Calendar;
+import java.util.Date;
+
+
+
+
 public class ResultsActivity extends AppCompatActivity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_results);
+
+        Calendar c = Calendar.getInstance();
+        Date time = c.getTime();
+        int date = c.get(Calendar.DAY_OF_MONTH);
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        int hour = c.get(Calendar.HOUR_OF_DAY);
+        int minutes = c.get(Calendar.MINUTE);
+
+
+        //convert to byte array to send
+
 
         //String[] tags = new String[] {"tag1", "tag2", "tag3"};
         //Spinner spinner = (Spinner) findViewById(R.id.spinner);
