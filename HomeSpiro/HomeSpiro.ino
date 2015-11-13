@@ -11,7 +11,7 @@
   #include "Usbhost.h"
   #include "AndroidAccessory.h"
   
-  #define spiro 1
+  #define spiro 7
 
   AndroidAccessory acc("Manufacturer",
   		"Model",
@@ -20,24 +20,27 @@
   		"http://yoursite.com",
                   "0000000012345678");
   
-  float Vi[10];
-  float Vi_avg;
-  byte buffer[400];
-  int threshold = 10; //change this (0-255)
-  int doneLength = 10; //change this (num samples of 0 = done)
+  int Vi[10];
+  int Vi_avg;
+  int data[400]={};
+  int threshold=20; //0.1 V offset from baseline
+  int doneLength = 100; //2 seconds of zeros = done
+  
 
   void setup(){
     // set communiation speed
-    Serial.begin(115200);
+    Serial.begin(9600);
+    Serial1.begin(9600);
    
-    Serial.print("\r\nStart");
-    boolean out = acc.isConnected();
-    Serial.println(out, DEC);
-    acc.powerOn();
+    //Serial.print("\r\nStart");
+    //boolean out = acc.isConnected();
+    //Serial.println(out, DEC);
+    //acc.powerOn();
     
     //set pins
     
     float Vi_sum=0;
+    pinMode(spiro, OUTPUT);
     //automatic offset calculation
     for (int i=0; i<10; i++){ 
       Vi[i] = analogRead(spiro); //take input from pin 1
@@ -52,18 +55,27 @@
   
   void loop(){
        
-   byte msg[1];
+   if (Serial.available()>0){
+     char incomingByte;
+     incomingByte = Serial.read();
+    if (incomingByte == '0'){
+      byte data[400]={};
+      measure();      
+      sendData();
     
-   int len;
-   len = acc.read(msg, sizeof(msg), 1);
-   if (len>0){
-      Serial.println(msg[0]);
-      if (msg[0]==1) {
-        byte buffer[400];  //reset buffer for new FVC/FEV measurement
-        measure();
-        sendData();
-      }     
+    }
    }
+    
+// //  int len;
+// //  len = acc.read(msg, sizeof(msg), 1);
+// //  if (len>0){
+//      //Serial.println(msg[0]);
+//      if (msg[0]==1) {
+//        byte data[400];  //reset data for new FVC/FEV measurement
+//        measure();
+//        sendData();
+//      }     
+// //  }
 
 
    
@@ -77,17 +89,18 @@ void measure(){
       
       if (zeroCounter>doneLength) break;        //user is done breathing
       int V_in = analogRead(1)-Vi_avg;          //auto offset
-      buffer[i] = (byte) V_in;
+      
+      data[i] = V_in;
     //voltage = V_in*5/1024
     
-    //exhale only--don't need?
+//    exhale only--don't need?
 //    if(V_in1<0){ //negative volume
 //    }
 //  
 //   if(V_in1>=0){ //positive volume
 //   }
 
-     if (V_in<threshold) zeroCounter++;    //count "0"s
+     if (V_in<threshold && i>100) zeroCounter++;  //count "0"s but 2s into recording
      else zeroCounter=0;               //must be consecutive    
      delay(20);                        //50 Hz sample rate = 20 ms period
      i++;
@@ -95,7 +108,12 @@ void measure(){
 }
 
 void sendData(){
-   if (acc.isConnected()){   
-       acc.write(buffer, sizeof(buffer));
-   } 
+//   if (acc.isConnected()){   
+//       acc.write(data, sizeof(data));
+//   } 
+    for (int i=0; i<400; i++){
+      Serial.print(data[i]); 
+    }
+    Serial.println();
+    
 }
