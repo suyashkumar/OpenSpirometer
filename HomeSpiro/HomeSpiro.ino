@@ -11,7 +11,7 @@
   #include "Usbhost.h"
   #include "AndroidAccessory.h"
   
-  #define spiro 7
+  #define spiro 0
 
   AndroidAccessory acc("Manufacturer",
   		"Model",
@@ -20,17 +20,16 @@
   		"http://yoursite.com",
                   "0000000012345678");
   
-  int Vi[10];
+  float Vi_avg_float;
   int Vi_avg;
   int data[400]={};
-  int threshold=20; //0.1 V offset from baseline
+  int threshold=10; //0.05 V offset from baseline
   int doneLength = 100; //2 seconds of zeros = done
   
 
   void setup(){
     // set communiation speed
     Serial.begin(9600);
-    Serial1.begin(9600);
    
     //Serial.print("\r\nStart");
     //boolean out = acc.isConnected();
@@ -39,16 +38,16 @@
     
     //set pins
     
-    float Vi_sum=0;
+    int Vi_sum=0;
     pinMode(spiro, OUTPUT);
     //automatic offset calculation
-    for (int i=0; i<10; i++){ 
-      Vi[i] = analogRead(spiro); //take input from pin 1
-      Vi_sum = Vi_sum+Vi[i];
+    for (int i=0; i<30; i++){ 
+      int Vi = analogRead(spiro); //take input from pin 1
+      Vi_sum = Vi_sum+Vi;
     }
 
-    Vi_avg = Vi_sum/10;
-    
+    Vi_avg_float = ((float) Vi_sum)/30;
+    Vi_avg = (int) Vi_avg_float;
     
   }
 
@@ -59,7 +58,7 @@
      char incomingByte;
      incomingByte = Serial.read();
     if (incomingByte == '0'){
-      byte data[400]={};
+      int data[400]={};
       measure();      
       sendData();
     
@@ -85,13 +84,14 @@
 void measure(){
     int i=0;
     int zeroCounter = 0;
+    boolean breathStarted = false;
     while(i<399){
       
       if (zeroCounter>doneLength) break;        //user is done breathing
-      int V_in = analogRead(1)-Vi_avg;          //auto offset
+      int V_in = analogRead(spiro)-Vi_avg;          //auto offset
       
-      data[i] = V_in;
-    //voltage = V_in*5/1024
+
+    //voltage = V_in*5/1023
     
 //    exhale only--don't need?
 //    if(V_in1<0){ //negative volume
@@ -100,10 +100,18 @@ void measure(){
 //   if(V_in1>=0){ //positive volume
 //   }
 
-     if (V_in<threshold && i>100) zeroCounter++;  //count "0"s but 2s into recording
-     else zeroCounter=0;               //must be consecutive    
+   
+     
+     if (V_in>threshold || breathStarted == true){ //only start counting when value is above threshold
+        data[i] = V_in;
+        breathStarted = true;
+        i++;
+     }
+     
+     if (V_in<threshold && breathStarted == true) zeroCounter++;  //count "0"s after breathStarted
+     else zeroCounter=0;               //must be consecutive 
+     
      delay(20);                        //50 Hz sample rate = 20 ms period
-     i++;
     }
 }
 
