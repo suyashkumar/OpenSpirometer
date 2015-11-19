@@ -31,15 +31,103 @@
         android:text="Today's Results:"
         android:id="@+id/resultsText"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="154dp" />
+        android:layout_centerHorizontal="true" />
 
-    <Spinner
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/spinner"
-        android:layout_below="@+id/resultsText"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="80dp" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="FEV"
+        android:id="@+id/FEVlabel"
+        android:layout_above="@+id/FVClabel"
+        android:layout_alignStart="@+id/FVClabel" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="FVC"
+        android:id="@+id/FVClabel"
+        android:singleLine="false"
+        android:layout_centerVertical="true"
+        android:layout_alignEnd="@+id/ratioLabel" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="FEV/FVC"
+        android:id="@+id/ratioLabel"
+        android:layout_below="@+id/FVClabel"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Your Value"
+        android:id="@+id/userVal"
+        android:layout_above="@+id/FEVlabel"
+        android:layout_alignStart="@+id/resultsText" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Normal Range"
+        android:id="@+id/normal"
+        android:layout_above="@+id/FEVlabel"
+        android:layout_alignStart="@+id/graphsButton" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/FEV"
+        android:layout_above="@+id/FVClabel"
+        android:layout_alignStart="@+id/FVC" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/FVC"
+        android:layout_alignTop="@+id/FVCnorm"
+        android:layout_alignStart="@+id/userVal" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/ratio"
+        android:layout_alignBottom="@+id/ratioLabel"
+        android:layout_alignStart="@+id/FVC" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text"
+        android:id="@+id/FEVnorm"
+        android:layout_below="@+id/normal"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text"
+        android:id="@+id/FVCnorm"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text"
+        android:id="@+id/ratioNorm"
+        android:layout_alignTop="@+id/ratio"
+        android:layout_alignStart="@+id/FEVnorm" />
 
 </RelativeLayout>

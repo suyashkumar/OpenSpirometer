@@ -46,6 +46,10 @@ public class GraphActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_graph);
+        //TODO: change to real address
+        String address = "something";
+        getDatafromServer(address);
+        generateGraphs();
         Bundle extra = getIntent().getExtras();
         username = extra.getString("username");
         System.out.println(username);
@@ -68,6 +72,21 @@ public class GraphActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
+    //TODO: Suyash
+    //parse data received from server to send to generateGraphs (will need to add args)
+    public void getDatafromServer(String address) {
+        String data = getData(address); //do for last 10 points
+        //parse ratios from data
+        generateGraphs();
+    }
+
+    //TODO: Amy
+    //Method to get data from server
+    public String getData(String address){
+        String data = "request from server";
+        return data;
 
     public void checkConnectivity() {
         ConnectivityManager connectivityManager = (ConnectivityManager)
@@ -207,6 +226,8 @@ public class GraphActivity extends AppCompatActivity {
     }
 
     public boolean generateGraphs() {
+
+
         // Line graph
         GraphView lineGraph = (GraphView) findViewById(R.id.lineGraph);
         LineGraphSeries<DataPoint> lineSeries = new LineGraphSeries<DataPoint>(new DataPoint[] {
@@ -283,4 +304,3 @@ public class GraphActivity extends AppCompatActivity {
 
 
 }
-

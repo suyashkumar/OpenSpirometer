@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -27,27 +28,20 @@ public class ResultsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_results);
-
-        Calendar c = Calendar.getInstance();
-        Date time = c.getTime();
-        int date = c.get(Calendar.DAY_OF_MONTH);
-        int year = c.get(Calendar.YEAR);
-        int month = c.get(Calendar.MONTH);
-        int hour = c.get(Calendar.HOUR_OF_DAY);
-        int minutes = c.get(Calendar.MINUTE);
+        String address = "something"; //TODO: change to real address
+        getDatafromServer(address);
 
 
-        //convert to byte array to send
+    //time stuff--probably better way?
+//        Calendar c = Calendar.getInstance();
+//        Date time = c.getTime();
+//        int date = c.get(Calendar.DAY_OF_MONTH);
+//        int year = c.get(Calendar.YEAR);
+//        int month = c.get(Calendar.MONTH);
+//        int hour = c.get(Calendar.HOUR_OF_DAY);
+//        int minutes = c.get(Calendar.MINUTE);
 
 
-        //String[] tags = new String[] {"tag1", "tag2", "tag3"};
-        //Spinner spinner = (Spinner) findViewById(R.id.spinner);
-        //ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,android.R.layout.simple_spinner_item);
-        //// Specify the layout to use when the list of choices appears
-        //adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        //// Apply the adapter to the spinner
-        //spinner.setAdapter(adapter);
-        //spinner.setPrompt("Select one");
     }
 
     @Override
@@ -70,6 +64,33 @@ public class ResultsActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    //TODO: Suyash
+    //Parse data received from server to get ratio, FVC, FEV
+    public void getDatafromServer(String address) {
+        String data = getData(address); //do for last 10 points
+        //parse ratio, FVC, FEV from data
+        double ratio=0;
+        double FVC=0;
+        double FEV=0;
+        updateUI(ratio, FVC, FEV);
+    }
+
+    //TODO: Amy
+    //Method to get data from server
+    public String getData(String address){
+        String data = "response from server";
+        return data;
+    }
+
+    public void updateUI(double ratio, double FVC, double FEV){
+        TextView FEVText = (TextView) findViewById(R.id.FEV);
+        TextView FVCText = (TextView) findViewById(R.id.FVC);
+        TextView ratioText = (TextView) findViewById(R.id.ratio);
+        FEVText.setText(String.valueOf(FEV));
+        FVCText.setText(String.valueOf(FVC));
+        ratioText.setText(String.valueOf(ratio));
     }
 
     public void toRecord(View view) {
