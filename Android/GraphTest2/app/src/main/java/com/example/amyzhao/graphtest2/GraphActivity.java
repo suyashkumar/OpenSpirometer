@@ -1,10 +1,13 @@
 package com.example.amyzhao.graphtest2;
 
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,8 +23,21 @@ import com.jjoe64.graphview.series.Series;
 import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.DefaultLabelFormatter;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import android.os.AsyncTask;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+import com.loopj.android.http.*;
+
 public class GraphActivity extends AppCompatActivity {
 
+    String username;
     float[] fvc;
     float[] fev;
     private static Context context;
@@ -30,10 +46,8 @@ public class GraphActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_graph);
-        System.out.println("hello");
-        //Intent intent = getIntent();
-        System.out.println("got intent");
-        generateGraphs();
+        checkConnectivity();
+        //generateGraphs();
         GraphActivity.context = getApplicationContext();
     }
 
@@ -51,6 +65,143 @@ public class GraphActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void checkConnectivity() {
+        ConnectivityManager connectivityManager = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+            //new getInfoTask().execute(username);
+            new postInfoTask().execute(username);
+        } else {
+            // error
+            System.out.println("no connection :(");
+        }
+
+    }
+
+    private class getInfoTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... urls) {
+
+            // params comes from the execute() call: params[0] is the url.
+            try {
+                if (getInfo(username)) {
+                    return "";
+                } else {
+                    throw new IOException("error");
+                }
+
+            } catch (IOException e) {
+                return "Unable to retrieve web page. URL may be invalid.";
+            }
+        }
+        // onPostExecute displays the results of the AsyncTask.
+        @Override
+        protected void onPostExecute(String result) {
+            //textView.setText(result);
+            generateGraphs();
+        }
+    }
+
+    private class postInfoTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... urls) {
+
+            // params comes from the execute() call: params[0] is the url.
+            try {
+                if (postInfo(username)) {
+                    return "";
+                } else {
+                    throw new IOException("error");
+                }
+
+            } catch (IOException e) {
+                return "Unable to retrieve web page. URL may be invalid.";
+            }
+        }
+        // onPostExecute displays the results of the AsyncTask.
+        @Override
+        protected void onPostExecute(String result) {
+            //textView.setText(result);
+            generateGraphs();
+        }
+    }
+
+    public boolean postInfo(String username) {
+        try {
+            URL url = new URL("http://colab-sbx-76.oit.duke.edu:8000/pushData");
+            String urlParameters="{\"clubhash\":\"100457d41b9-ab22-4825-9393-ac7f6e8ff961\",\"username\":\"anonymous\",\"message\":\"simply awesome\",\"timestamp\":\"2012/11/05 13:00:00\"}";
+
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("POST");
+            con.setRequestProperty("Content-Type", "application/json");
+            //con.setRequestProperty("Content-Length", "" +
+            //Integer.toString(urlParameters.getBytes().length));
+            con.setRequestProperty("Content-Language", "en-US");
+
+            con.setDoOutput(true);
+            con.setDoInput(true);
+            con.setChunkedStreamingMode(0);
+
+            con.connect();
+
+            DataOutputStream out = new DataOutputStream(con.getOutputStream());
+            //byte[] buffer = urlParameters.getBytes();
+            out.writeBytes(urlParameters);
+            out.flush();
+            out.close();
+
+            InputStream is = con.getInputStream();
+            BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+            String line;
+            StringBuffer response = new StringBuffer();
+            while((line = rd.readLine()) != null) {
+                response.append(line);
+                response.append('\r');
+            }
+            rd.close();
+            System.out.println("message="+response.toString());
+
+            con.disconnect();
+            return true;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean getInfo(String username) {
+        try {
+            URL url = new URL("http://colab-sbx-76.oit.duke.edu:8000/");
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setDoInput(true);
+            con.setRequestMethod("GET");
+
+            con.connect();
+
+            int response = con.getResponseCode();
+            System.out.println("response: ");
+            System.out.println(response);
+
+            InputStream is = con.getInputStream();
+
+
+            String contentAsString = "";
+            int a;
+            while((a = is.read()) != -1) {
+                contentAsString = contentAsString + (char) a;
+            }
+
+            System.out.println(contentAsString);
+            return true;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public boolean generateGraphs() {
@@ -103,10 +254,10 @@ public class GraphActivity extends AppCompatActivity {
         // bar graph
         GraphView barGraph = (GraphView) findViewById(R.id.barGraph);
         BarGraphSeries<DataPoint> barSeries = new BarGraphSeries<>(new DataPoint[] {
-            new DataPoint(0,2),
-            new DataPoint(1,5),
-            new DataPoint(2,3),
-            new DataPoint(3,2)
+                new DataPoint(0,2),
+                new DataPoint(1,5),
+                new DataPoint(2,3),
+                new DataPoint(3,2)
         });
 
         barGraph.addSeries(barSeries);
