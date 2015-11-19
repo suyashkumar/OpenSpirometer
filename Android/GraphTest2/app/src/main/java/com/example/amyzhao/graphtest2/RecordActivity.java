@@ -3,9 +3,14 @@ package com.example.amyzhao.graphtest2;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class RecordActivity extends AppCompatActivity {
 
@@ -37,20 +42,63 @@ public class RecordActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void toResults(View view) {
-        //get data over bluetooth
-        byte[] m={0, 1, 2, 3, 4};
-        int k = 500; //calibration constant
-        int FVC=0;
-        int FEV=0;
-        for (int i=0; i<m.length; i++){
-            int v = m[i]*5/1024;
-            FVC += v*0.02;
-            if(i<400){
-                FEV+=v*0.02;
+
+    //split by commas
+    public String[] getTags(){
+        EditText tagText = (EditText) findViewById(R.id.tags);
+        String tagString = tagText.getText().toString();
+        String[] tags =tagString.split("\\s*,\\s*");
+        return tags;
+    }
+
+    //TODO: Suyash
+    public void record(View view){
+        String[] tags = getTags();
+        //Bluetooth async task
+        //on post-execute:
+        int[] buffer = new int[400]; //get from arduino
+        calculateAndSend(buffer, tags);
+        toResults();
+    }
+
+    public void calculateAndSend(int[] buffer, String[] tags){
+        double k = 2.4; //calibration constant
+        int FVC = 0;
+        int FEV = 0;
+        double[] flowRates = new double[400];
+        for (int i = 0; i < 400; i++) {
+            double voltage = buffer[i] * 5 / 1023;
+            double flowRate = voltage * k;
+            flowRates[i] = flowRate;
+            FVC += flowRate * 0.02;  //sum(Qdt)
+            if (i < 50) {            //first second
+                FEV += flowRate * 0.02;
             }
         }
-        FEV = FEV*k;
+
+        //TODO: Suyash
+        //compile string of all necessary data (flowRates, FVC, FEV, ratio, tags)
+        String data = "blabla";
+
+        String address = "something"; //TODO: change to real address
+        String response = postData(address, data);
+    }
+
+        //TODO: Amy
+        //Method to post latest data to server
+        public String postData(String address, String data){
+            String response = "some response from server";
+            return response;
+        }
+
+
+
+
+
+
+    //Note: changed to do automatically on onComplete instead of with button (took out View arg)
+
+    public void toResults() {
 
         Intent intent = new Intent(getApplicationContext(), ResultsActivity.class);
         startActivity(intent);

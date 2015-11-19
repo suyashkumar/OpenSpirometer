@@ -6,14 +6,6 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="com.example.amyzhao.graphtest2.RecordActivity">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Results"
-        android:id="@+id/resultsButton"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:onClick="toResults"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -54,7 +46,19 @@
         android:layout_height="wrap_content"
         android:text="Begin Recording"
         android:id="@+id/startButton"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@+id/tags"
+        android:layout_centerHorizontal="true"
+        android:onClick="record" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:text="Tags"
+        android:ems="10"
+        android:id="@+id/tags"
+        android:layout_marginTop="62dp"
+        android:layout_below="@+id/line4"
+        android:layout_alignEnd="@+id/line1" />
 
 </RelativeLayout>
