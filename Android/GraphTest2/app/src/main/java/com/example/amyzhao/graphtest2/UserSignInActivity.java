@@ -7,6 +7,8 @@ import android.view.MenuItem;
 import android.content.Intent;
 import android.view.View;
 import android.widget.EditText;
+import android.view.View.OnTouchListener;
+
 
 import com.example.amyzhao.graphtest2.R;
 
@@ -42,7 +44,10 @@ public class UserSignInActivity extends AppCompatActivity {
     }
 
     public void login(View view) {
+        EditText edit = (EditText)findViewById(R.id.username);
+        String user = edit.getText().toString();
         Intent intent = new Intent(getApplicationContext(), GraphActivity.class);
+        intent.putExtra("username", user);
         startActivity(intent);
     }
 }
