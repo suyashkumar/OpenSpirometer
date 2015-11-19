@@ -6,7 +6,7 @@ var app     		= express();
 var bodyParser		= require('body-parser');
 
 var db = require('./config/db');
-var port=8080;
+var port=80;
 var mongoose=require('mongoose');
 mongoose.connect(db.url);
 app.use(bodyParser.json());
