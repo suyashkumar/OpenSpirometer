@@ -46,8 +46,10 @@ public class GraphActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_graph);
-        checkConnectivity();
-        //generateGraphs();
+        Bundle extra = getIntent().getExtras();
+        username = extra.getString("username");
+        System.out.println(username);
+       // checkConnectivity();
         GraphActivity.context = getApplicationContext();
     }
 
