@@ -38,6 +38,7 @@ import com.loopj.android.http.*;
 public class GraphActivity extends AppCompatActivity {
 
     String username;
+    String URL;
     float[] fvc;
     float[] fev;
     private static Context context;
@@ -46,14 +47,13 @@ public class GraphActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_graph);
-        //TODO: change to real address
-        String address = "something";
-        getDatafromServer(address);
-        generateGraphs();
+
         Bundle extra = getIntent().getExtras();
         username = extra.getString("username");
         System.out.println(username);
-       // checkConnectivity();
+        URL = "http://spiro.suyash.io/" + username + "/data";
+        getDataFromServer(URL, username);
+
         GraphActivity.context = getApplicationContext();
     }
 
@@ -76,25 +76,21 @@ public class GraphActivity extends AppCompatActivity {
 
     //TODO: Suyash
     //parse data received from server to send to generateGraphs (will need to add args)
-    public void getDatafromServer(String address) {
-        String data = getData(address); //do for last 10 points
+    public void parseDatafromServer(String address) {
+        //String data = getDataFromServer(address); //do for last 10 points
         //parse ratios from data
         generateGraphs();
     }
 
     //TODO: Amy
     //Method to get data from server
-    public String getData(String address){
-        String data = "request from server";
-        return data;
-
-    public void checkConnectivity() {
+    public void getDataFromServer(String URL, String user) {
         ConnectivityManager connectivityManager = (ConnectivityManager)
                 getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
             //new getInfoTask().execute(username);
-            new postInfoTask().execute(username);
+            new getInfoTask().execute(username);
         } else {
             // error
             System.out.println("no connection :(");
@@ -108,7 +104,7 @@ public class GraphActivity extends AppCompatActivity {
 
             // params comes from the execute() call: params[0] is the url.
             try {
-                if (getInfo(username)) {
+                if (getInfo(URL)) {
                     return "";
                 } else {
                     throw new IOException("error");
@@ -194,9 +190,9 @@ public class GraphActivity extends AppCompatActivity {
         }
     }
 
-    public boolean getInfo(String username) {
+    private boolean getInfo(String URL) {
         try {
-            URL url = new URL("http://colab-sbx-76.oit.duke.edu:8000/");
+            URL url = new URL(URL);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setDoInput(true);
             con.setRequestMethod("GET");
