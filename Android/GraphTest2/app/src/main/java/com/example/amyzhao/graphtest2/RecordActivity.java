@@ -1,6 +1,10 @@
 package com.example.amyzhao.graphtest2;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -9,10 +13,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class RecordActivity extends AppCompatActivity {
+
+    String username;
+    String URL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,19 +95,89 @@ public class RecordActivity extends AppCompatActivity {
         String data = "blabla";
 
         String address = "something"; //TODO: change to real address
-        String response = postData(address, data);
+        postDataToServer(URL, username, data);
     }
 
-        //TODO: Amy
-        //Method to post latest data to server
-        public String postData(String address, String data){
-            String response = "some response from server";
-            return response;
+    //TODO: Amy
+    //Method to post data to server
+    public void postDataToServer(String URL, String user, String input) {
+        ConnectivityManager connectivityManager = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+            new postInfoTask().execute(username);
+        } else {
+            // error
+            System.out.println("no connection :(");
         }
+     }
 
+    private class postInfoTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... urls) {
 
+            // params comes from the execute() call: params[0] is the url.
+            try {
+                if (true) {
+                    return postInfo(username);
+                } else {
+                    throw new IOException("error");
+                }
+            } catch (IOException e) {
+                return "Unable to retrieve web page. URL may be invalid.";
+            }
+        }
+        // onPostExecute displays the results of the AsyncTask.
+        @Override
+        protected void onPostExecute(String result) {
+            //textView.setText(result);
+            //generateGraphs();
+        }
+    }
 
+    public String postInfo(String username) {
+        try {
+            java.net.URL url = new URL("http://colab-sbx-76.oit.duke.edu:8000/pushData");
+            String urlParameters="{\"clubhash\":\"100457d41b9-ab22-4825-9393-ac7f6e8ff961\",\"username\":\"anonymous\",\"message\":\"simply awesome\",\"timestamp\":\"2012/11/05 13:00:00\"}";
 
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("POST");
+            con.setRequestProperty("Content-Type", "application/json");
+            //con.setRequestProperty("Content-Length", "" +
+            //Integer.toString(urlParameters.getBytes().length));
+            con.setRequestProperty("Content-Language", "en-US");
+
+            con.setDoOutput(true);
+            con.setDoInput(true);
+            con.setChunkedStreamingMode(0);
+
+            con.connect();
+
+            DataOutputStream out = new DataOutputStream(con.getOutputStream());
+            //byte[] buffer = urlParameters.getBytes();
+            out.writeBytes(urlParameters);
+            out.flush();
+            out.close();
+
+            InputStream is = con.getInputStream();
+            BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+            String line;
+            StringBuffer response = new StringBuffer();
+            while((line = rd.readLine()) != null) {
+                response.append(line);
+                response.append('\r');
+            }
+            rd.close();
+            System.out.println("message="+response.toString());
+
+            con.disconnect();
+            return response.toString();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "error";
+        }
+    }
 
 
     //Note: changed to do automatically on onComplete instead of with button (took out View arg)
