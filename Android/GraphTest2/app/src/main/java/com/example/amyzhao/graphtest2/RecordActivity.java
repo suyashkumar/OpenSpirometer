@@ -100,14 +100,13 @@ public class RecordActivity extends AppCompatActivity {
         //TODO: Suyash
         //compile string of all necessary data (flowRates, FVC, FEV, ratio, tags)
         String data = "blabla";
-
-        String address = "something"; //TODO: change to real address
-        postDataToServer(URL, username, data);
+        content = data;
+        postDataToServer();
     }
 
     //TODO: Amy
     //Method to post data to server
-    public void postDataToServer(String URL, String user, String input) {
+    public void postDataToServer() {
         ConnectivityManager connectivityManager = (ConnectivityManager)
                 getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
@@ -126,7 +125,7 @@ public class RecordActivity extends AppCompatActivity {
             // params comes from the execute() call: params[0] is the url.
             try {
                 if (true) {
-                    return postInfo(username);
+                    return postInfo();
                 } else {
                     throw new IOException("error");
                 }
@@ -141,10 +140,12 @@ public class RecordActivity extends AppCompatActivity {
         }
     }
 
-    public String postInfo(String username) {
+    public String postInfo() {
         try {
-            java.net.URL url = new URL("http://colab-sbx-76.oit.duke.edu:8000/pushData");
-            String urlParameters="{\"clubhash\":\"100457d41b9-ab22-4825-9393-ac7f6e8ff961\",\"username\":\"anonymous\",\"message\":\"simply awesome\",\"timestamp\":\"2012/11/05 13:00:00\"}";
+            String urlToUse = URL + "/pushData";
+            System.out.println(urlToUse);
+            URL url = new URL(urlToUse);
+            //String urlParameters="{\"clubhash\":\"100457d41b9-ab22-4825-9393-ac7f6e8ff961\",\"username\":\"anonymous\",\"message\":\"simply awesome\",\"timestamp\":\"2012/11/05 13:00:00\"}";
 
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("POST");
@@ -160,8 +161,7 @@ public class RecordActivity extends AppCompatActivity {
             con.connect();
 
             DataOutputStream out = new DataOutputStream(con.getOutputStream());
-            //byte[] buffer = urlParameters.getBytes();
-            out.writeBytes(urlParameters);
+            out.writeBytes(content);
             out.flush();
             out.close();
 
@@ -189,8 +189,8 @@ public class RecordActivity extends AppCompatActivity {
     //Note: changed to do automatically on onComplete instead of with button (took out View arg)
 
     public void toResults() {
-
         Intent intent = new Intent(getApplicationContext(), ResultsActivity.class);
+        intent.putExtra("username", username);
         startActivity(intent);
     }
 
