@@ -7,7 +7,6 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Editable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,6 +30,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import java.util.UUID;
 import android.os.Handler;
+import android.widget.TextView;
 
 public class RecordActivity extends AppCompatActivity {
 
@@ -49,7 +49,7 @@ public class RecordActivity extends AppCompatActivity {
     int readBufferPosition;
     int counter;
     volatile boolean stopWorker;
-    StringBuffer recievedData;
+    StringBuffer receivedData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +62,7 @@ public class RecordActivity extends AppCompatActivity {
         URL = "http://spiro.suyash.io/api/" + username;
         System.out.println(URL);
 
-        recievedData=new StringBuffer();
+        receivedData =new StringBuffer();
         Button openButton = (Button)findViewById(R.id.connect);
 
         openButton.setOnClickListener(new View.OnClickListener() {
@@ -108,7 +108,7 @@ public class RecordActivity extends AppCompatActivity {
         mmSocket.connect();
         mmOutputStream = mmSocket.getOutputStream();
         mmInputStream = mmSocket.getInputStream();
-        beginListenForData();
+        //beginListenForData();
         //myLabel.setText("Bluetooth Opened");
 
     }
@@ -139,15 +139,18 @@ public class RecordActivity extends AppCompatActivity {
         final Handler handler = new Handler();
         final byte delimiter = 10; //This is the ASCII code for a newline character
 
+        System.out.println("beginning to listen for data");
         stopWorker = false;
         readBufferPosition = 0;
-        readBuffer = new byte[1024];
+        readBuffer = new byte[4096];
         workerThread = new Thread(new Runnable() {
             public void run() {
+                System.out.println("starting worker");
                 while(!Thread.currentThread().isInterrupted() && !stopWorker) {
                     try {
                         int bytesAvailable = mmInputStream.available();
                         if(bytesAvailable > 0) {
+                            System.out.println("bytes are available");
                             byte[] packetBytes = new byte[bytesAvailable];
                             mmInputStream.read(packetBytes);
                             for(int i=0;i<bytesAvailable;i++) {
@@ -157,13 +160,29 @@ public class RecordActivity extends AppCompatActivity {
                                     System.arraycopy(readBuffer, 0, encodedBytes, 0, encodedBytes.length);
                                     final String data = new String(encodedBytes, "US-ASCII");
                                     System.out.println(data);
+
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            TextView test = (TextView) findViewById(R.id.testText);
+                                            test.setText(data);
+                                        }
+                                    });
+
                                     readBufferPosition = 0;
 
                                     handler.post(new Runnable() {
                                         public void run() {
                                             //myLabel.setText(data);
-                                            recievedData.append(data);
+                                            receivedData.append(data);
                                             System.out.println(data);
+
+                                            String[] tags = getTags();
+                                            int[] parsedData = parseData(data.toString());
+                                            System.out.println("testing from thread");
+                                            System.out.println(Arrays.toString(tags));
+                                            System.out.println(Arrays.toString(parsedData));
+                                            calculateAndSend(parsedData, tags);
                                             // Call Future functions
                                         }
                                     });
@@ -189,12 +208,13 @@ public class RecordActivity extends AppCompatActivity {
         EditText tagText = (EditText) findViewById(R.id.tags);
         String tagString = tagText.getText().toString();
         String[] tags =tagString.split("\\s*,\\s*");
+        System.out.println("getTags result:");
+        System.out.println(Arrays.toString(tags));
         return tags;
     }
 
     //TODO: Suyash
     public void record(View view){
-        String[] tags = getTags();
         //Bluetooth async task
         //on post-execute:
         int[] buffer = new int[400]; //get from arduino
@@ -204,30 +224,58 @@ public class RecordActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        beginListenForData();
 
-        calculateAndSend(buffer, tags);
+        System.out.println("listening from record");
+        beginListenForData();
     }
 
-    public void calculateAndSend(int[] buffer, String[] tags){
-        double k = 2.4; //calibration constant
-        int FVC = 0;
-        int FEV = 0;
+
+    public int[] parseData(String data) {
+        String[] parsed =data.split("\\s*,\\s*");
+
+        int[] ret = new int[parsed.length];
+        for(int j = 0; j < ret.length; j++) {
+            ret[j] = Integer.parseInt(parsed[j]);
+        }
+
+        System.out.println("parseData result:");
+        System.out.println(Arrays.toString(ret));
+        return ret;
+    }
+
+   public void calculateAndSend(int[] buffer, String[] tags){
+        double k = 6.05; //calibration constant
+        double FVC = 0;
+        double FEV = 0;
         double[] flowRates = new double[400];
         for (int i = 0; i < 400; i++) {
-            double voltage = buffer[i] * 5 / 1023;
+            double voltage = ((double) buffer[i]) * 5 / 1023;
             double flowRate = voltage * k;
             flowRates[i] = flowRate;
-            FVC += flowRate * 0.02;  //sum(Qdt)
+            FVC += (flowRate * 0.02);  //sum(Qdt)
             if (i < 50) {            //first second
-                FEV += flowRate * 0.02;
+                FEV += (flowRate * 0.02);
             }
         }
 
         //TODO: Suyash
         //compile string of all necessary data (flowRates, FVC, FEV, ratio, tags)
+
+        System.out.println("flowrates");
+       System.out.println(Arrays.toString(flowRates));
+
+       System.out.println("FEV");
+        String fevString = Double.toString(FEV);
+        System.out.println(fevString);
+
+       System.out.println("FVC");
+        String fvcString = Double.toString(FVC);
+        System.out.println(fvcString);
+        System.out.println(Arrays.toString(tags));
+
+       //TODO: Suyash change content to actual thing
         String data = "blabla";
-        content = data;
+        content = "{\"clubhash\":\"100457d41b9-ab22-4825-9393-ac7f6e8ff961\",\"username\":\"anonymous\",\"message\":\"simply awesome\",\"timestamp\":\"2012/11/05 13:00:00\"}";
         postDataToServer();
     }
 
