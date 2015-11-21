@@ -39,6 +39,7 @@ public class GraphActivity extends AppCompatActivity {
 
     String username;
     String URL;
+    String content;
     float[] fvc;
     float[] fev;
     private static Context context;
@@ -51,8 +52,9 @@ public class GraphActivity extends AppCompatActivity {
         Bundle extra = getIntent().getExtras();
         username = extra.getString("username");
         System.out.println(username);
-        URL = "http://spiro.suyash.io/" + username + "/data";
-        getDataFromServer(URL, username);
+        URL = "http://spiro.suyash.io/api/" + username;
+        System.out.println(URL);
+        getDataFromServer();
 
         GraphActivity.context = getApplicationContext();
     }
@@ -76,6 +78,7 @@ public class GraphActivity extends AppCompatActivity {
 
     //TODO: Suyash
     //parse data received from server to send to generateGraphs (will need to add args)
+    // hi suyash, content is the data received from server as a string
     public void parseDatafromServer(String address) {
         //String data = getDataFromServer(address); //do for last 10 points
         //parse ratios from data
@@ -84,12 +87,11 @@ public class GraphActivity extends AppCompatActivity {
 
     //TODO: Amy
     //Method to get data from server
-    public void getDataFromServer(String URL, String user) {
+    public void getDataFromServer() {
         ConnectivityManager connectivityManager = (ConnectivityManager)
                 getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
-            //new getInfoTask().execute(username);
             new getInfoTask().execute(username);
         } else {
             // error
@@ -104,7 +106,7 @@ public class GraphActivity extends AppCompatActivity {
 
             // params comes from the execute() call: params[0] is the url.
             try {
-                if (getInfo(URL)) {
+                if (getInfo()) {
                     return "";
                 } else {
                     throw new IOException("error");
@@ -117,8 +119,7 @@ public class GraphActivity extends AppCompatActivity {
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {
-            //textView.setText(result);
-            generateGraphs();
+            parseDatafromServer(URL);
         }
     }
 
@@ -190,9 +191,11 @@ public class GraphActivity extends AppCompatActivity {
         }
     }
 
-    private boolean getInfo(String URL) {
+    private boolean getInfo() {
         try {
-            URL url = new URL(URL);
+            String urlToUse = URL + "/data";
+            System.out.println(urlToUse);
+            URL url = new URL(urlToUse);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setDoInput(true);
             con.setRequestMethod("GET");
@@ -211,6 +214,8 @@ public class GraphActivity extends AppCompatActivity {
             while((a = is.read()) != -1) {
                 contentAsString = contentAsString + (char) a;
             }
+
+            content = contentAsString;
 
             System.out.println(contentAsString);
             return true;
@@ -294,6 +299,7 @@ public class GraphActivity extends AppCompatActivity {
 
     public void toRecord(View view) {
         Intent intent = new Intent(getApplicationContext(), RecordActivity.class);
+        intent.putExtra("username", username);
         startActivity(intent);
     }
 

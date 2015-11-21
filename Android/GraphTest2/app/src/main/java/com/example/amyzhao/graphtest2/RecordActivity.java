@@ -27,11 +27,19 @@ public class RecordActivity extends AppCompatActivity {
 
     String username;
     String URL;
+    String content;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record);
+
+        Bundle extra = getIntent().getExtras();
+        username = extra.getString("username");
+        System.out.println(username);
+        URL = "http://spiro.suyash.io/api/" + username;
+        System.out.println(URL);
+
     }
 
     @Override
@@ -72,7 +80,6 @@ public class RecordActivity extends AppCompatActivity {
         //on post-execute:
         int[] buffer = new int[400]; //get from arduino
         calculateAndSend(buffer, tags);
-        toResults();
     }
 
     public void calculateAndSend(int[] buffer, String[] tags){
@@ -130,8 +137,7 @@ public class RecordActivity extends AppCompatActivity {
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {
-            //textView.setText(result);
-            //generateGraphs();
+            toResults();
         }
     }
 

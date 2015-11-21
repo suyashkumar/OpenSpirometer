@@ -54,7 +54,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
-        android:text="Tags"
+        android:hint="Enter Tags"
         android:ems="10"
         android:id="@+id/tags"
         android:layout_marginTop="62dp"

@@ -21,9 +21,9 @@
         android:layout_height="wrap_content"
         android:text="Login"
         android:id="@+id/loginButton"
-        android:layout_below="@+id/tags"
-        android:layout_centerHorizontal="true"
-        android:onClick="login"/>
+        android:onClick="login"
+        android:layout_below="@+id/username"
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="wrap_content"
