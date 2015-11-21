@@ -93,7 +93,6 @@ public class ResultsActivity extends AppCompatActivity {
 
     //TODO: Amy
     //Method to get data from server
-    //Method to get data from server
     public void getDataFromServer() {
         ConnectivityManager connectivityManager = (ConnectivityManager)
                 getSystemService(Context.CONNECTIVITY_SERVICE);
