@@ -33,6 +33,9 @@ public class ResultsActivity extends AppCompatActivity {
     String URL;
     String username;
     String content;
+    double FEV;
+    double FVC;
+    double ratio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,10 +44,14 @@ public class ResultsActivity extends AppCompatActivity {
 
         Bundle extra = getIntent().getExtras();
         username = extra.getString("username");
+        FEV = extra.getDouble("FEV");
+        FVC = extra.getDouble("FVC");
+        ratio = FEV/FVC;
         System.out.println(username);
         URL = "http://spiro.suyash.io/api/" + username;
         System.out.println(URL);
-        getDataFromServer();
+        updateUI();
+        //getDataFromServer();
 
 
     //time stuff--probably better way?
@@ -88,83 +95,10 @@ public class ResultsActivity extends AppCompatActivity {
         double ratio=0;
         double FVC=0;
         double FEV=0;
-        updateUI(ratio, FVC, FEV);
+        updateUI();
     }
 
-    //TODO: Amy
-    //Method to get data from server
-    public void getDataFromServer() {
-        ConnectivityManager connectivityManager = (ConnectivityManager)
-                getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-        if (networkInfo != null && networkInfo.isConnected()) {
-            new getInfoTask().execute(username);
-        } else {
-            // error
-            System.out.println("no connection :(");
-        }
-
-    }
-
-    private class getInfoTask extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... urls) {
-
-            // params comes from the execute() call: params[0] is the url.
-            try {
-                if (getInfo()) {
-                    return "";
-                } else {
-                    throw new IOException("error");
-                }
-
-            } catch (IOException e) {
-                return "Unable to retrieve web page. URL may be invalid.";
-            }
-        }
-        // onPostExecute displays the results of the AsyncTask.
-        @Override
-        protected void onPostExecute(String result) {
-            //parseDatafromServer(URL);
-        }
-    }
-
-    private boolean getInfo() {
-        try {
-            String urlToUse = URL + "/data";
-            System.out.println(urlToUse);
-            URL url = new URL(urlToUse);
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            con.setDoInput(true);
-            con.setRequestMethod("GET");
-
-            con.connect();
-
-            int response = con.getResponseCode();
-            System.out.println("response: ");
-            System.out.println(response);
-
-            InputStream is = con.getInputStream();
-
-
-            String contentAsString = "";
-            int a;
-            while((a = is.read()) != -1) {
-                contentAsString = contentAsString + (char) a;
-            }
-
-            content = contentAsString;
-
-            System.out.println(contentAsString);
-            return true;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public void updateUI(double ratio, double FVC, double FEV){
+    public void updateUI(){
         TextView FEVText = (TextView) findViewById(R.id.FEV);
         TextView FVCText = (TextView) findViewById(R.id.FVC);
         TextView ratioText = (TextView) findViewById(R.id.ratio);
