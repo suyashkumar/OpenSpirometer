@@ -37,6 +37,8 @@ public class RecordActivity extends AppCompatActivity {
     String username;
     String URL;
     String content;
+    double FEV;
+    double FVC;
 
     EditText myTextbox;
     BluetoothAdapter mBluetoothAdapter;
@@ -221,8 +223,10 @@ public class RecordActivity extends AppCompatActivity {
 
         try {
             mmOutputStream.write('0');
+            System.out.println("wrote");
         } catch (IOException e) {
             e.printStackTrace();
+            System.out.println("caught");
         }
 
         System.out.println("listening from record");
@@ -244,9 +248,9 @@ public class RecordActivity extends AppCompatActivity {
     }
 
    public void calculateAndSend(int[] buffer, String[] tags){
-        double k = 2.3228; //calibration constant
-        double FVC = 0;
-        double FEV = 0;
+        double k = 1.3109; //calibration constant
+        FVC = 0;
+        FEV = 0;
         double[] flowRates = new double[400];
         for (int i = 0; i < 400; i++) {
             double voltage = ((double) buffer[i]) * 5 / 1023;
@@ -366,6 +370,8 @@ public class RecordActivity extends AppCompatActivity {
     public void toResults() {
         Intent intent = new Intent(getApplicationContext(), ResultsActivity.class);
         intent.putExtra("username", username);
+        intent.putExtra("FEV", FEV);
+        intent.putExtra("FVC", FVC);
         startActivity(intent);
     }
 

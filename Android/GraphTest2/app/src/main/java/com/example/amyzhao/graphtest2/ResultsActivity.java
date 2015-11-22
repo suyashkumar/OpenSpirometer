@@ -33,6 +33,9 @@ public class ResultsActivity extends AppCompatActivity {
     String URL;
     String username;
     String content;
+    double FEV;
+    double FVC;
+    double ratio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,10 +44,14 @@ public class ResultsActivity extends AppCompatActivity {
 
         Bundle extra = getIntent().getExtras();
         username = extra.getString("username");
+        FEV = extra.getDouble("FEV");
+        FVC = extra.getDouble("FVC");
+        ratio = FEV/FVC;
         System.out.println(username);
         URL = "http://spiro.suyash.io/api/" + username;
         System.out.println(URL);
-        getDataFromServer();
+        updateUI();
+        //getDataFromServer();
 
 
     //time stuff--probably better way?
@@ -88,7 +95,7 @@ public class ResultsActivity extends AppCompatActivity {
         double ratio=0;
         double FVC=0;
         double FEV=0;
-        updateUI(ratio, FVC, FEV);
+        updateUI();
     }
 
     //TODO: Amy
@@ -164,7 +171,7 @@ public class ResultsActivity extends AppCompatActivity {
         }
     }
 
-    public void updateUI(double ratio, double FVC, double FEV){
+    public void updateUI(){
         TextView FEVText = (TextView) findViewById(R.id.FEV);
         TextView FVCText = (TextView) findViewById(R.id.FVC);
         TextView ratioText = (TextView) findViewById(R.id.ratio);
