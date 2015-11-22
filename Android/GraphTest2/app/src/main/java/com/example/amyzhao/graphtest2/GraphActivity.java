@@ -38,6 +38,8 @@ import com.loopj.android.http.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class GraphActivity extends AppCompatActivity {
@@ -112,7 +114,7 @@ public class GraphActivity extends AppCompatActivity {
         }
 
 
-        generateGraphs();
+        generateGraphs(FEV, FVC);
     }
 
     //TODO: Amy
@@ -173,7 +175,7 @@ public class GraphActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             //textView.setText(result);
-            generateGraphs();
+            //generateGraphs();
         }
     }
 
@@ -256,22 +258,43 @@ public class GraphActivity extends AppCompatActivity {
         }
     }
 
-    public boolean generateGraphs() {
+    public boolean generateGraphs(List<Double> FEV, List<Double> FVC) {
+
+        HashMap<Integer, Double> map = new HashMap<Integer, Double>();
+
+        int entry = 0;
+        String dates[] = new String[10];
+        for (int i=FEV.size()-10; i<FEV.size(); i++){
+            long unixSeconds = 1372339860; //get from server
+            Date date = new Date(unixSeconds*1000L); // *1000 is to convert seconds to milliseconds
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z"); // the format of your date
+            sdf.setTimeZone(TimeZone.getTimeZone("GMT-5")); // give a timezone reference for formating
+            String formattedDate = sdf.format(date);
+            dates[entry] = formattedDate;
+            double ratio = FEV.get(i)/FVC.get(i);
+            map.put(entry, ratio);
+            entry++;
+        }
+
 
 
         // Line graph
         GraphView lineGraph = (GraphView) findViewById(R.id.lineGraph);
         LineGraphSeries<DataPoint> lineSeries = new LineGraphSeries<DataPoint>(new DataPoint[] {
-                new DataPoint(0, 1),
-                new DataPoint(1, 5),
-                new DataPoint(2, 3),
-                new DataPoint(3, 2),
-                new DataPoint(4, 6),
-                new DataPoint(5, 2),
-                new DataPoint(6, 10),
-                new DataPoint(7, 11),
+                new DataPoint(0, map.get(0)),
+                new DataPoint(1, map.get(1)),
+                new DataPoint(2, map.get(2)),
+                new DataPoint(3, map.get(3)),
+                new DataPoint(4, map.get(4)),
+                new DataPoint(5, map.get(5)),
+                new DataPoint(6, map.get(6)),
+                new DataPoint(7, map.get(7)),
+                new DataPoint(8, map.get(8)),
+                new DataPoint(9, map.get(9)),
+
         });
         lineGraph.addSeries(lineSeries);
+        //adjust x labels to formattedtime strings from dates array
 
         lineSeries.setOnDataPointTapListener(new OnDataPointTapListener() {
             @Override
