@@ -7,18 +7,9 @@
   */
   
   #include <Wire.h>  
-  #include "Max3421e.h"
-  #include "Usbhost.h"
-  #include "AndroidAccessory.h"
-  
   #define spiro 0
 
-  AndroidAccessory acc("Manufacturer",
-  		"Model",
-  		"Description",
-  		"1.0",
-  		"http://yoursite.com",
-                  "0000000012345678");
+
   
   float Vi_avg_float;
   int Vi_avg;
@@ -29,15 +20,7 @@
 
   void setup(){
     // set communiation speed
-    Serial.begin(9600);
-   
-    //Serial.print("\r\nStart");
-    //boolean out = acc.isConnected();
-    //Serial.println(out, DEC);
-    //acc.powerOn();
-    
-    //set pins
-    
+    Serial.begin(9600);   
     int Vi_sum=0;
     pinMode(spiro, OUTPUT);
     //automatic offset calculation
@@ -63,21 +46,8 @@
       sendData();
     
     }
-   }
-    
-// //  int len;
-// //  len = acc.read(msg, sizeof(msg), 1);
-// //  if (len>0){
-//      //Serial.println(msg[0]);
-//      if (msg[0]==1) {
-//        byte data[400];  //reset data for new FVC/FEV measurement
-//        measure();
-//        sendData();
-//      }     
-// //  }
-
-
-   
+  }
+ 
   
 }
 
@@ -86,6 +56,7 @@ void measure(){
     int zeroCounter = 0;
     boolean breathStarted = false;
     while(i<399){
+      int time1 = millis();
       
       if (zeroCounter>doneLength) break;        //user is done breathing
       int V_in = analogRead(spiro)-Vi_avg;          //auto offset
@@ -110,8 +81,9 @@ void measure(){
      
      if (V_in<threshold && breathStarted == true) zeroCounter++;  //count "0"s after breathStarted
      else zeroCounter=0;               //must be consecutive 
-     
-     delay(20);                        //50 Hz sample rate = 20 ms period
+     int time2 = millis();
+     int timeElapsed = time2-time1;
+     delay(10-timeElapsed);                        //50 Hz sample rate = 20 ms period
     }
 }
 
@@ -120,8 +92,10 @@ void sendData(){
 //       acc.write(data, sizeof(data));
 //   } 
     for (int i=0; i<400; i++){
-      Serial.print(data[i]); 
+      Serial.print(data[i]);
+      Serial.print(',');
     }
     Serial.println();
     
 }
+
