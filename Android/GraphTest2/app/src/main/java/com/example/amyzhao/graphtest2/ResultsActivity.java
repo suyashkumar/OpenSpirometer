@@ -97,7 +97,7 @@ public class ResultsActivity extends AppCompatActivity {
         double FEV=0;
         updateUI();
     }
-    
+
     public void updateUI(){
         TextView FEVText = (TextView) findViewById(R.id.FEV);
         TextView FVCText = (TextView) findViewById(R.id.FVC);

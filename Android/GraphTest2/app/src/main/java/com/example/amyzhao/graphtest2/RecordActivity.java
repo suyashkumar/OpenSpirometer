@@ -115,6 +115,13 @@ public class RecordActivity extends AppCompatActivity {
 
     }
 
+    void closeBT() throws IOException {
+        stopWorker = true;
+        mmOutputStream.close();
+        mmInputStream.close();
+        mmSocket.close();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -315,6 +322,10 @@ public class RecordActivity extends AppCompatActivity {
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {
+            try {
+                closeBT();
+            }
+            catch (IOException ex) { }
             toResults();
         }
     }
