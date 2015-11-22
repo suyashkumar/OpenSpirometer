@@ -82,6 +82,7 @@ public class GraphActivity extends AppCompatActivity {
     public void parseDatafromServer(String address) {
         //String data = getDataFromServer(address); //do for last 10 points
         //parse ratios from data
+
         generateGraphs();
     }
 

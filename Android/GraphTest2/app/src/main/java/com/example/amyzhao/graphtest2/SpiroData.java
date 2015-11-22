@@ -21,6 +21,8 @@ public class SpiroData {
 
     public SpiroData(){
         date="The Date";
+        temp=0;
+        humidity=0;
     }
     // Overloaded constructor allows init of object of construction
     public SpiroData(String inputJSON){

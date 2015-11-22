@@ -31,7 +31,8 @@ import android.bluetooth.BluetoothSocket;
 import java.util.UUID;
 import android.os.Handler;
 import android.widget.TextView;
-
+import java.util.ArrayList;
+import java.util.List;
 public class RecordActivity extends AppCompatActivity {
 
     String username;
@@ -258,11 +259,11 @@ public class RecordActivity extends AppCompatActivity {
         double k = 1.3109; //calibration constant
         FVC = 0;
         FEV = 0;
-        double[] flowRates = new double[400];
+        List<Double> flowRates = new ArrayList<Double>();
         for (int i = 0; i < 400; i++) {
             double voltage = ((double) buffer[i]) * 5 / 1023;
             double flowRate = voltage * k;
-            flowRates[i] = flowRate;
+            flowRates.add(flowRate);
             FVC += (flowRate * 0.02);  //sum(Qdt)
             if (i < 50) {            //first second
                 FEV += (flowRate * 0.02);
@@ -271,9 +272,20 @@ public class RecordActivity extends AppCompatActivity {
 
         //TODO: Suyash
         //compile string of all necessary data (flowRates, FVC, FEV, ratio, tags)
+       SpiroData currentDataObject = new SpiroData();
+       currentDataObject.FEV = FEV;
+       currentDataObject.FVC = FVC;
+       currentDataObject.data = flowRates;
+       List <String> tagList = new ArrayList<String>();
+       for (String tag: tags){
+          tagList.add(tag);
+       }
+        currentDataObject.tags = tagList;
 
-        System.out.println("flowrates");
-       System.out.println(Arrays.toString(flowRates));
+
+
+       System.out.println("flowrates");
+       System.out.println(flowRates.toString());
 
        System.out.println("FEV");
         String fevString = Double.toString(FEV);
@@ -286,8 +298,10 @@ public class RecordActivity extends AppCompatActivity {
 
        //TODO: Suyash change content to actual thing
         String data = "blabla";
-        content = "{\"clubhash\":\"100457d41b9-ab22-4825-9393-ac7f6e8ff961\",\"username\":\"anonymous\",\"message\":\"simply awesome\",\"timestamp\":\"2012/11/05 13:00:00\"}";
-        postDataToServer();
+        //content = "{\"clubhash\":\"100457d41b9-ab22-4825-9393-ac7f6e8ff961\",\"username\":\"anonymous\",\"message\":\"simply awesome\",\"timestamp\":\"2012/11/05 13:00:00\"}";
+       content = currentDataObject.toJSONString();
+       System.out.println("JSON POST String: "+content);
+       postDataToServer();
     }
 
     //TODO: Amy
