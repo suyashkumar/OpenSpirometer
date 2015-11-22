@@ -35,6 +35,11 @@ import java.io.InputStreamReader;
 
 import com.loopj.android.http.*;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import java.util.*;
+
 public class GraphActivity extends AppCompatActivity {
 
     String username;
@@ -42,7 +47,10 @@ public class GraphActivity extends AppCompatActivity {
     String content;
     float[] fvc;
     float[] fev;
+    List<Double> FVC;
+    List<Double> FEV;
     private static Context context;
+    ArrayList<SpiroData> recData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +63,10 @@ public class GraphActivity extends AppCompatActivity {
         URL = "http://spiro.suyash.io/api/" + username;
         System.out.println(URL);
         getDataFromServer();
-
+        recData = new ArrayList<SpiroData>();
         GraphActivity.context = getApplicationContext();
+        FEV = new ArrayList<Double>();
+        FVC = new ArrayList<Double>();
     }
 
 
@@ -80,8 +90,27 @@ public class GraphActivity extends AppCompatActivity {
     //parse data received from server to send to generateGraphs (will need to add args)
     // hi suyash, content is the data received from server as a string
     public void parseDatafromServer(String address) {
-        //String data = getDataFromServer(address); //do for last 10 points
+        //String data = getDataFromServer(); //do for last 10 points
         //parse ratios from data
+        try {
+            JSONArray jArr = new JSONArray(content);
+            for (int i=0;i<jArr.length();i++){
+                JSONObject currObj = jArr.getJSONObject(i);
+                recData.add(new SpiroData(currObj.toString()));
+                System.out.println(currObj.getDouble("FEV"));
+                FEV.add(currObj.getDouble("FEV"));
+                FVC.add(currObj.getDouble("FVC"));
+            }
+            System.out.println(FEV);
+            System.out.println(FVC);
+            //FVC and FEV are arraylists with the data
+            
+            //System.out.println("Stuff: "+jArr.getJSONObject(0).getString("date"));
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
 
         generateGraphs();
     }
