@@ -197,7 +197,6 @@ public class GraphActivity extends AppCompatActivity {
             con.connect();
 
             DataOutputStream out = new DataOutputStream(con.getOutputStream());
-            //byte[] buffer = urlParameters.getBytes();
             out.writeBytes(urlParameters);
             out.flush();
             out.close();
@@ -286,23 +285,7 @@ public class GraphActivity extends AppCompatActivity {
         // Line graph
         GraphView lineGraph = (GraphView) findViewById(R.id.lineGraph);
         LineGraphSeries<DataPoint> lineSeries = new LineGraphSeries<DataPoint>(new DataPoint[] {
-                /*new DataPoint(0, map.get(0)),
-                new DataPoint(1, map.get(1)),
-                new DataPoint(2, map.get(2)),
-                new DataPoint(3, map.get(3)),
-                new DataPoint(4, map.get(4)),
-                new DataPoint(5, map.get(5)),
-                new DataPoint(6, map.get(6)),
-                new DataPoint(7, map.get(7)),
-                new DataPoint(8, map.get(8)),
-                new DataPoint(9, map.get(9)),*/
-
                 new DataPoint(dates[0], ratio.get(0)),
-
-                //new DataPoint(1372339860, ratio.get(0)),
-                //new DataPoint(1372426260, ratio.get(1)),
-                //new DataPoint(1372512660, ratio.get(2)),
-
         });
 
         for (int i = 1; i < dates.length; i++) {
@@ -320,19 +303,7 @@ public class GraphActivity extends AppCompatActivity {
         });
 
         Viewport viewport = lineGraph.getViewport();
-/*
-        lineGraph.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
-            @Override
-            public String formatLabel(double value, boolean isValueX) {
-                if (isValueX) {
-                    return null;
-                } else {
-                    return super.formatLabel(value,isValueX) + " L";
-                }
-            }
-        });*/
 
-        //lineGraph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(this));
         final java.text.DateFormat dateTimeFormatter = DateFormat.getDateFormat(this);
 
         lineGraph.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
