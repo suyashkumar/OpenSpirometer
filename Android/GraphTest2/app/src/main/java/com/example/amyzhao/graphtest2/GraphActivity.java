@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.content.Context;
 import android.content.Intent;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.widget.Toast;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.LabelFormatter;
+import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
 import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.DataPointInterface;
@@ -39,7 +41,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
+import android.text.format.DateFormat;
 import java.util.*;
 
 public class GraphActivity extends AppCompatActivity {
@@ -47,8 +49,6 @@ public class GraphActivity extends AppCompatActivity {
     String username;
     String URL;
     String content;
-    float[] fvc;
-    float[] fev;
     List<Double> FVC;
     List<Double> FEV;
     private static Context context;
@@ -112,7 +112,6 @@ public class GraphActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
 
         generateGraphs(FEV, FVC);
     }
@@ -260,7 +259,13 @@ public class GraphActivity extends AppCompatActivity {
 
     public boolean generateGraphs(List<Double> FEV, List<Double> FVC) {
 
-        HashMap<Integer, Double> map = new HashMap<Integer, Double>();
+        List<Double> ratio = new ArrayList<Double>();
+        for (int i = 0; i < FEV.size(); i++) {
+            double r = FEV.get(i)/FVC.get(i);
+            ratio.add(r);
+        }
+
+        /*HashMap<Integer, Double> map = new HashMap<Integer, Double>();
 
         int entry = 0;
         String dates[] = new String[10];
@@ -274,14 +279,14 @@ public class GraphActivity extends AppCompatActivity {
             double ratio = FEV.get(i)/FVC.get(i);
             map.put(entry, ratio);
             entry++;
-        }
+        }*/
 
-
+        int[] dates = new int[]{1372339860,1372426260,1372512660};
 
         // Line graph
         GraphView lineGraph = (GraphView) findViewById(R.id.lineGraph);
         LineGraphSeries<DataPoint> lineSeries = new LineGraphSeries<DataPoint>(new DataPoint[] {
-                new DataPoint(0, map.get(0)),
+                /*new DataPoint(0, map.get(0)),
                 new DataPoint(1, map.get(1)),
                 new DataPoint(2, map.get(2)),
                 new DataPoint(3, map.get(3)),
@@ -290,41 +295,65 @@ public class GraphActivity extends AppCompatActivity {
                 new DataPoint(6, map.get(6)),
                 new DataPoint(7, map.get(7)),
                 new DataPoint(8, map.get(8)),
-                new DataPoint(9, map.get(9)),
+                new DataPoint(9, map.get(9)),*/
+
+                new DataPoint(dates[0], ratio.get(0)),
+
+                //new DataPoint(1372339860, ratio.get(0)),
+                //new DataPoint(1372426260, ratio.get(1)),
+                //new DataPoint(1372512660, ratio.get(2)),
 
         });
+
+        for (int i = 1; i < dates.length; i++) {
+            lineSeries.appendData(new DataPoint(dates[i], ratio.get(i)), true, 10);
+        }
+
         lineGraph.addSeries(lineSeries);
         //adjust x labels to formattedtime strings from dates array
 
         lineSeries.setOnDataPointTapListener(new OnDataPointTapListener() {
             @Override
             public void onTap(Series series, DataPointInterface dataPointInterface) {
-                Toast.makeText(context, (CharSequence) ("10/30/15: FVC = " + dataPointInterface), Toast.LENGTH_LONG).show();
+                Toast.makeText(context, (CharSequence) ("FEV/FVC = " + dataPointInterface), Toast.LENGTH_LONG).show();
             }
         });
 
         Viewport viewport = lineGraph.getViewport();
+/*
+        lineGraph.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
+            @Override
+            public String formatLabel(double value, boolean isValueX) {
+                if (isValueX) {
+                    return null;
+                } else {
+                    return super.formatLabel(value,isValueX) + " L";
+                }
+            }
+        });*/
+
+        //lineGraph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(this));
+        final java.text.DateFormat dateTimeFormatter = DateFormat.getDateFormat(this);
 
         lineGraph.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
             @Override
             public String formatLabel(double value, boolean isValueX) {
                 if (isValueX) {
-                    // show normal x values
-                    return super.formatLabel(value, isValueX);
+                    // transform number to time
+                    return dateTimeFormatter.format(new Date((long) value*1000));
                 } else {
-                    // show currency for y values
-                    return super.formatLabel(value, isValueX) + " L";
+                    return super.formatLabel(value, isValueX);
                 }
             }
         });
-
+/*
         viewport.setXAxisBoundsManual(true);
-        viewport.setMinX(5);
-        viewport.setMaxX(7);
-
+        viewport.setMinX(0);
+        viewport.setMaxX(40);
+*/
         viewport.setYAxisBoundsManual(true);
         viewport.setMinY(0);
-        viewport.setMaxY(12);
+        viewport.setMaxY(2);
 
         viewport.setScrollable(true);
 
