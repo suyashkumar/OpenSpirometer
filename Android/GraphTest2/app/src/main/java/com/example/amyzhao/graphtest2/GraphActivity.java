@@ -102,6 +102,7 @@ public class GraphActivity extends AppCompatActivity {
     public void parseDatafromServer(String address) {
         //String data = getDataFromServer(); //do for last 10 points
         //parse ratios from data
+        System.out.println("HI PARSINGDATA FROM SERVER");
         try {
             JSONArray jArr = new JSONArray(content);
             for (int i=0;i<jArr.length();i++){
@@ -172,6 +173,7 @@ public class GraphActivity extends AppCompatActivity {
     //TODO: Amy
     //Method to get data from server
     public void getDataFromServer() {
+        System.out.println("Get data from server");
         ConnectivityManager connectivityManager = (ConnectivityManager)
                 getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
@@ -209,6 +211,7 @@ public class GraphActivity extends AppCompatActivity {
 
     private boolean getInfo() {
         try {
+
             String urlToUse = URL + "/data";
             System.out.println(urlToUse);
             URL url = new URL(urlToUse);
@@ -226,12 +229,18 @@ public class GraphActivity extends AppCompatActivity {
 
 
             String contentAsString = "";
+            StringBuilder buf = new StringBuilder();
             int a;
             while((a = is.read()) != -1) {
-                contentAsString = contentAsString + (char) a;
+                //contentAsString = contentAsString + (char) a;
+                buf.append((char)a);
+                //System.out.println("loop");
             }
 
-            content = contentAsString;
+            content = buf.toString();
+            System.out.println("content:"+content);
+
+
 
             System.out.println(contentAsString);
             return true;
