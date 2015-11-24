@@ -30,6 +30,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import android.os.AsyncTask;
@@ -41,8 +43,11 @@ import com.loopj.android.http.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import android.text.format.DateFormat;
+
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class GraphActivity extends AppCompatActivity {
@@ -119,16 +124,49 @@ public class GraphActivity extends AppCompatActivity {
         }
 
         generateGraphs(FEV, FVC);
+        System.out.println("tryna update UI");
         updateUI();
+        System.out.println("updated UI");
     }
 
     public void updateUI() {
         TextView fev1 = (TextView) findViewById(R.id.fev1Recent);
         TextView fvc = (TextView) findViewById(R.id.fvcRecent);
-        String fevText = "FEV1: " + Double.toString(FEV.get(FEV.size()-1));
-        String fvcText = "FVC: "+ Double.toString(FVC.get(FVC.size()-1));
-        fev1.setText(fevText);
-        fvc.setText(fvcText);
+        TextView fev1norm = (TextView) findViewById(R.id.fev1Normal);
+        TextView fvcnorm = (TextView) findViewById(R.id.fvcNormal);
+        TextView date = (TextView) findViewById(R.id.date);
+
+        Double fev1Val = round(FEV.get(FEV.size()-1), 2);
+        Double fvcVal = round(FVC.get(FVC.size()-1), 2);
+        String dateVal = dateToString(dates.get(dates.size()-1));
+
+        String fevText = "FEV1: " + Double.toString(fev1Val);
+        String fvcText = "FVC: " + Double.toString(fvcVal);
+        String fevNormText = "FEV1 (Normal Range): 2.5 - 6.0 L";
+        String fvcNormText = "FVC (Normal Range): 3.0 - 7.0 L";
+        String dateText = "Date: " + dateVal;
+
+        fev1.setText(fevText + " L");
+        fvc.setText(fvcText + " L");
+        fev1norm.setText(fevNormText);
+        fvcnorm.setText(fvcNormText);
+        date.setText(dateText);
+    }
+
+    public String dateToString(Integer timestamp) {
+        int unixSeconds = timestamp;
+        Date date = new Date(unixSeconds*1000L); // *1000 is to convert seconds to milliseconds
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z"); // the format of your date
+        String formattedDate = sdf.format(date);
+        return formattedDate;
+    }
+
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
     }
 
     //TODO: Amy
@@ -212,23 +250,6 @@ public class GraphActivity extends AppCompatActivity {
             ratio.add(r);
         }
 
-        /*HashMap<Integer, Double> map = new HashMap<Integer, Double>();
-
-        int entry = 0;
-        String dates[] = new String[10];
-        for (int i=FEV.size()-10; i<FEV.size(); i++){
-            long unixSeconds = 1372339860; //get from server
-            Date date = new Date(unixSeconds*1000L); // *1000 is to convert seconds to milliseconds
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z"); // the format of your date
-            sdf.setTimeZone(TimeZone.getTimeZone("GMT-5")); // give a timezone reference for formating
-            String formattedDate = sdf.format(date);
-            dates[entry] = formattedDate;
-            double ratio = FEV.get(i)/FVC.get(i);
-            map.put(entry, ratio);
-            entry++;
-        }*/
-
-
         // Line graph
         GraphView lineGraph = (GraphView) findViewById(R.id.lineGraph);
         LineGraphSeries<DataPoint> lineSeries = new LineGraphSeries<DataPoint>(new DataPoint[] {
@@ -240,12 +261,11 @@ public class GraphActivity extends AppCompatActivity {
         }
 
         lineGraph.addSeries(lineSeries);
-        //adjust x labels to formattedtime strings from dates array
 
         lineSeries.setOnDataPointTapListener(new OnDataPointTapListener() {
             @Override
             public void onTap(Series series, DataPointInterface dataPointInterface) {
-                Toast.makeText(context, (CharSequence) ("FEV/FVC = " + dataPointInterface), Toast.LENGTH_LONG).show();
+                Toast.makeText(context, (CharSequence) ("FEV/FVC = " + dataPointInterface.getY()), Toast.LENGTH_LONG).show();
             }
         });
 

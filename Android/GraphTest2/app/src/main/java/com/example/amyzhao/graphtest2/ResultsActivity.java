@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Calendar;
@@ -102,9 +104,21 @@ public class ResultsActivity extends AppCompatActivity {
         TextView FEVText = (TextView) findViewById(R.id.FEV);
         TextView FVCText = (TextView) findViewById(R.id.FVC);
         TextView ratioText = (TextView) findViewById(R.id.ratio);
-        FEVText.setText(String.valueOf(FEV));
-        FVCText.setText(String.valueOf(FVC));
+
+        Double fev1Val = round(FEV, 2);
+        Double fvcVal = round(FVC, 2);
+
+        FEVText.setText(Double.toString(fev1Val));
+        FVCText.setText(Double.toString(fvcVal));
         ratioText.setText(String.valueOf(ratio));
+    }
+
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
     }
 
     public void toRecord(View view) {

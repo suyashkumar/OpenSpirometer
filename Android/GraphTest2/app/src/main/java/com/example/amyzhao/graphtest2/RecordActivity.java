@@ -257,7 +257,7 @@ public class RecordActivity extends AppCompatActivity {
     }
 
    public void calculateAndSend(int[] buffer, String[] tags){
-        double k = 1.3109; //calibration constant
+        double k = 2.7470; //calibration constant
         FVC = 0;
         FEV = 0;
         List<Double> flowRates = new ArrayList<Double>();
