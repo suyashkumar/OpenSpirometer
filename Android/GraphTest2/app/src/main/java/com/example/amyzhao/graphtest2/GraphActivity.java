@@ -51,6 +51,7 @@ public class GraphActivity extends AppCompatActivity {
     String content;
     List<Double> FVC;
     List<Double> FEV;
+    List<Double> dates;
     private static Context context;
     ArrayList<SpiroData> recData;
 
@@ -69,6 +70,7 @@ public class GraphActivity extends AppCompatActivity {
         GraphActivity.context = getApplicationContext();
         FEV = new ArrayList<Double>();
         FVC = new ArrayList<Double>();
+        dates = new ArrayList<Double>();
     }
 
 
@@ -102,9 +104,11 @@ public class GraphActivity extends AppCompatActivity {
                 System.out.println(currObj.getDouble("FEV"));
                 FEV.add(currObj.getDouble("FEV"));
                 FVC.add(currObj.getDouble("FVC"));
+                dates.add(currObj.getDouble("date"));
             }
             System.out.println(FEV);
             System.out.println(FVC);
+            System.out.println(dates);
             //FVC and FEV are arraylists with the data
             
             //System.out.println("Stuff: "+jArr.getJSONObject(0).getString("date"));
@@ -113,7 +117,7 @@ public class GraphActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        generateGraphs(FEV, FVC);
+        //generateGraphs(FEV, FVC);
     }
 
     //TODO: Amy

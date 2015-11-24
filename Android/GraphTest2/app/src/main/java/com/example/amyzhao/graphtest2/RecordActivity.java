@@ -40,6 +40,7 @@ public class RecordActivity extends AppCompatActivity {
     String content;
     double FEV;
     double FVC;
+    String date;
 
     EditText myTextbox;
     BluetoothAdapter mBluetoothAdapter;
@@ -270,12 +271,16 @@ public class RecordActivity extends AppCompatActivity {
             }
         }
 
+       int dateInt = (int) (System.currentTimeMillis()/1000L);
+       date=Integer.toString(dateInt);
+
         //TODO: Suyash
         //compile string of all necessary data (flowRates, FVC, FEV, ratio, tags)
        SpiroData currentDataObject = new SpiroData();
        currentDataObject.FEV = FEV;
        currentDataObject.FVC = FVC;
        currentDataObject.data = flowRates;
+       currentDataObject.date = date;
        List <String> tagList = new ArrayList<String>();
        for (String tag: tags){
           tagList.add(tag);
