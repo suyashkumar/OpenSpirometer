@@ -104,7 +104,7 @@ public class GraphActivity extends AppCompatActivity {
             System.out.println(FEV);
             System.out.println(FVC);
             //FVC and FEV are arraylists with the data
-            
+
             //System.out.println("Stuff: "+jArr.getJSONObject(0).getString("date"));
 
         } catch (JSONException e) {
