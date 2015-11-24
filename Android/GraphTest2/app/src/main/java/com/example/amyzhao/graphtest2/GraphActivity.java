@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.LabelFormatter;
@@ -51,7 +52,7 @@ public class GraphActivity extends AppCompatActivity {
     String content;
     List<Double> FVC;
     List<Double> FEV;
-    List<Double> dates;
+    List<Integer> dates;
     private static Context context;
     ArrayList<SpiroData> recData;
 
@@ -70,7 +71,7 @@ public class GraphActivity extends AppCompatActivity {
         GraphActivity.context = getApplicationContext();
         FEV = new ArrayList<Double>();
         FVC = new ArrayList<Double>();
-        dates = new ArrayList<Double>();
+        dates = new ArrayList<Integer>();
     }
 
 
@@ -104,7 +105,7 @@ public class GraphActivity extends AppCompatActivity {
                 System.out.println(currObj.getDouble("FEV"));
                 FEV.add(currObj.getDouble("FEV"));
                 FVC.add(currObj.getDouble("FVC"));
-                dates.add(currObj.getDouble("date"));
+                dates.add(Integer.parseInt(currObj.getString("date")));
             }
             System.out.println(FEV);
             System.out.println(FVC);
@@ -117,7 +118,17 @@ public class GraphActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        //generateGraphs(FEV, FVC);
+        generateGraphs(FEV, FVC);
+        updateUI();
+    }
+
+    public void updateUI() {
+        TextView fev1 = (TextView) findViewById(R.id.fev1Recent);
+        TextView fvc = (TextView) findViewById(R.id.fvcRecent);
+        String fevText = "FEV1: " + Double.toString(FEV.get(FEV.size()-1));
+        String fvcText = "FVC: "+ Double.toString(FVC.get(FVC.size()-1));
+        fev1.setText(fevText);
+        fvc.setText(fvcText);
     }
 
     //TODO: Amy
@@ -155,73 +166,6 @@ public class GraphActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             parseDatafromServer(URL);
-        }
-    }
-
-    private class postInfoTask extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... urls) {
-
-            // params comes from the execute() call: params[0] is the url.
-            try {
-                if (postInfo(username)) {
-                    return "";
-                } else {
-                    throw new IOException("error");
-                }
-
-            } catch (IOException e) {
-                return "Unable to retrieve web page. URL may be invalid.";
-            }
-        }
-        // onPostExecute displays the results of the AsyncTask.
-        @Override
-        protected void onPostExecute(String result) {
-            //textView.setText(result);
-            //generateGraphs();
-        }
-    }
-
-    public boolean postInfo(String username) {
-        try {
-            URL url = new URL("http://colab-sbx-76.oit.duke.edu:8000/pushData");
-            String urlParameters="{\"clubhash\":\"100457d41b9-ab22-4825-9393-ac7f6e8ff961\",\"username\":\"anonymous\",\"message\":\"simply awesome\",\"timestamp\":\"2012/11/05 13:00:00\"}";
-
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            con.setRequestMethod("POST");
-            con.setRequestProperty("Content-Type", "application/json");
-            //con.setRequestProperty("Content-Length", "" +
-            //Integer.toString(urlParameters.getBytes().length));
-            con.setRequestProperty("Content-Language", "en-US");
-
-            con.setDoOutput(true);
-            con.setDoInput(true);
-            con.setChunkedStreamingMode(0);
-
-            con.connect();
-
-            DataOutputStream out = new DataOutputStream(con.getOutputStream());
-            out.writeBytes(urlParameters);
-            out.flush();
-            out.close();
-
-            InputStream is = con.getInputStream();
-            BufferedReader rd = new BufferedReader(new InputStreamReader(is));
-            String line;
-            StringBuffer response = new StringBuffer();
-            while((line = rd.readLine()) != null) {
-                response.append(line);
-                response.append('\r');
-            }
-            rd.close();
-            System.out.println("message="+response.toString());
-
-            con.disconnect();
-            return true;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
         }
     }
 
@@ -284,16 +228,15 @@ public class GraphActivity extends AppCompatActivity {
             entry++;
         }*/
 
-        int[] dates = new int[]{1372339860,1372426260,1372512660};
 
         // Line graph
         GraphView lineGraph = (GraphView) findViewById(R.id.lineGraph);
         LineGraphSeries<DataPoint> lineSeries = new LineGraphSeries<DataPoint>(new DataPoint[] {
-                new DataPoint(dates[0], ratio.get(0)),
+                new DataPoint(dates.get(0), ratio.get(0)),
         });
 
-        for (int i = 1; i < dates.length; i++) {
-            lineSeries.appendData(new DataPoint(dates[i], ratio.get(i)), true, 10);
+        for (int i = 1; i < dates.size(); i++) {
+            lineSeries.appendData(new DataPoint(dates.get(i), ratio.get(i)), true, 10);
         }
 
         lineGraph.addSeries(lineSeries);
@@ -315,7 +258,7 @@ public class GraphActivity extends AppCompatActivity {
             public String formatLabel(double value, boolean isValueX) {
                 if (isValueX) {
                     // transform number to time
-                    return dateTimeFormatter.format(new Date((long) value*1000));
+                    return dateTimeFormatter.format(new Date((long) value * 1000));
                 } else {
                     return super.formatLabel(value, isValueX);
                 }
