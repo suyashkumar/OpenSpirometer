@@ -61,17 +61,7 @@ void measure(){
       if (zeroCounter>doneLength) break;        //user is done breathing
       int V_in = analogRead(spiro)-Vi_avg;          //auto offset
       
-
-    //voltage = V_in*5/1023
-    
-//    exhale only--don't need?
-//    if(V_in1<0){ //negative volume
-//    }
-//  
-//   if(V_in1>=0){ //positive volume
-//   }
-
-   
+ 
      
      if (V_in>threshold || breathStarted == true){ //only start counting when value is above threshold
         data[i] = V_in;
@@ -83,18 +73,22 @@ void measure(){
      else zeroCounter=0;               //must be consecutive 
      int time2 = millis();
      int timeElapsed = time2-time1;
-     delay(10-timeElapsed);                        //50 Hz sample rate = 20 ms period
-    }
+     delay(20-timeElapsed);                        //50 Hz sample rate = 20 ms period
+     //int testTime = millis();
+     //int samplePeriod = testTime-time1;
+     //Serial.println(samplePeriod);  
+  }
 }
 
 void sendData(){
-//   if (acc.isConnected()){   
-//       acc.write(data, sizeof(data));
-//   } 
+   //Serial.print("[");
     for (int i=0; i<400; i++){
       Serial.print(data[i]);
-      Serial.print(',');
+  //    if(i!=399){
+        Serial.print(',');
+  //    }
     }
+  //  Serial.print("]");
     Serial.println();
     
 }

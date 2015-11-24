@@ -107,7 +107,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
+        android:text="2.5 - 6.0 L"
         android:id="@+id/FEVnorm"
         android:layout_below="@+id/normal"
         android:layout_alignParentEnd="true" />
@@ -116,7 +116,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
+        android:text="3.0 - 7.0 L"
         android:id="@+id/FVCnorm"
         android:layout_centerVertical="true"
         android:layout_alignParentEnd="true" />
@@ -125,7 +125,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
+        android:text="> 70%"
         android:id="@+id/ratioNorm"
         android:layout_alignTop="@+id/ratio"
         android:layout_alignStart="@+id/FEVnorm" />

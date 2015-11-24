@@ -20,7 +20,7 @@ public class SpiroData {
     double FVC;
 
     public SpiroData(){
-        date="The Date";
+        date = "";
         temp=0;
         humidity=0;
     }
@@ -31,13 +31,13 @@ public class SpiroData {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        date="The Date";
     }
 
     public void populateFieldsfromJSON(String inputJSON) throws JSONException {
         JSONObject jObj = new JSONObject(inputJSON);
         FEV = jObj.getDouble("FEV");
         FVC = jObj.getDouble("FVC");
+        date = jObj.getString("date");
         temp = jObj.getJSONObject("params").getDouble("temp");
         humidity = jObj.getJSONObject("params").getDouble("humidity");
 
@@ -79,7 +79,7 @@ public class SpiroData {
             paramsObj.put("tags",tagsArray);
 
             jObj.put("params", paramsObj); // add params obj to main JSON obj
-            jObj.put("date", date);
+            jObj.put("date", this.date);
 
             return jObj.toString();
 
