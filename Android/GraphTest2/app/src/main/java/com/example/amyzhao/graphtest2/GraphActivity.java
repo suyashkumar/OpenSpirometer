@@ -265,7 +265,7 @@ public class GraphActivity extends AppCompatActivity {
         lineSeries.setOnDataPointTapListener(new OnDataPointTapListener() {
             @Override
             public void onTap(Series series, DataPointInterface dataPointInterface) {
-                Toast.makeText(context, (CharSequence) ("FEV/FVC = " + dataPointInterface), Toast.LENGTH_LONG).show();
+                Toast.makeText(context, (CharSequence) ("FEV/FVC = " + dataPointInterface.getY()), Toast.LENGTH_LONG).show();
             }
         });
 
