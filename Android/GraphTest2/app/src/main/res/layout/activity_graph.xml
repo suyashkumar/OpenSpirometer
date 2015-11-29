@@ -19,17 +19,18 @@
         android:layout_width="match_parent"
         android:layout_height="200dip"
         android:id="@+id/barGraph"
-        android:layout_below="@+id/lineGraph"
+        android:layout_above="@+id/lineGraph"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="103dp" />
+        android:layout_alignParentTop="true"
+         />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Most Recent Results:"
         android:id="@+id/results"
-        android:layout_above="@+id/lineGraph"
-        android:layout_alignParentTop="true"
+        android:layout_below="@+id/barGraph"
+        android:layout_marginTop="103dp"
         android:layout_alignParentStart="true" />
 
     <Button

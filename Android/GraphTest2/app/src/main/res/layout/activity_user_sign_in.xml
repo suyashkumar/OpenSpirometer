@@ -16,7 +16,8 @@
         android:hint="Enter Username"
         android:textColor="#000"
         android:layout_above="@+id/loginButton"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:textColorHint="#000" />
 
     <Button
         android:layout_width="wrap_content"

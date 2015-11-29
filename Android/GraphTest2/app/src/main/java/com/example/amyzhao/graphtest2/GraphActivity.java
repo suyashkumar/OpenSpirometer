@@ -58,6 +58,8 @@ public class GraphActivity extends AppCompatActivity {
     List<Double> FVC;
     List<Double> FEV;
     List<Integer> dates;
+    List<List<Double>> dataArray;
+    List<List<String>> tagArray;
     private static Context context;
     ArrayList<SpiroData> recData;
 
@@ -112,6 +114,20 @@ public class GraphActivity extends AppCompatActivity {
                 FEV.add(currObj.getDouble("FEV"));
                 FVC.add(currObj.getDouble("FVC"));
                 dates.add(Integer.parseInt(currObj.getString("date")));
+                JSONArray tagJSON = currObj.getJSONArray("tags");
+                ArrayList<String> currentTagList = new ArrayList<String>();
+                for (int j = 0; j<tagJSON.length(); j++){
+                    currentTagList.add(tagJSON.get(j).toString());
+                }
+                tagArray.add(currentTagList);
+
+                JSONArray dataJSON = currObj.getJSONArray("data");
+                ArrayList<Double> currentData = new ArrayList<Double>();
+                for (int j = 0; j<dataJSON.length(); j++){
+                    currentData.add((Double) dataJSON.get(j));
+                }
+                dataArray.add(currentData);
+
             }
             System.out.println(FEV);
             System.out.println(FVC);
@@ -261,12 +277,15 @@ public class GraphActivity extends AppCompatActivity {
 
         // Line graph
         GraphView lineGraph = (GraphView) findViewById(R.id.lineGraph);
+        final HashMap<Integer, List<String>> tagMap = new HashMap<Integer, List<String>>();
         LineGraphSeries<DataPoint> lineSeries = new LineGraphSeries<DataPoint>(new DataPoint[] {
                 new DataPoint(dates.get(0), ratio.get(0)),
         });
-
+        tagMap.put(dates.get(0), tagArray.get(0));
         for (int i = 1; i < dates.size(); i++) {
             lineSeries.appendData(new DataPoint(dates.get(i), ratio.get(i)), true, 10);
+            tagMap.put(dates.get(i), tagArray.get(i));
+
         }
 
         lineGraph.addSeries(lineSeries);
@@ -274,14 +293,13 @@ public class GraphActivity extends AppCompatActivity {
         lineSeries.setOnDataPointTapListener(new OnDataPointTapListener() {
             @Override
             public void onTap(Series series, DataPointInterface dataPointInterface) {
-                Toast.makeText(context, (CharSequence) ("FEV/FVC = " + dataPointInterface.getY()), Toast.LENGTH_LONG).show();
+                Toast.makeText(context, (CharSequence) (dataPointInterface.getY() + "%"+ tagMap.get(dataPointInterface.getX())), Toast.LENGTH_LONG).show();
             }
         });
 
         Viewport viewport = lineGraph.getViewport();
 
         final java.text.DateFormat dateTimeFormatter = DateFormat.getDateFormat(this);
-
         lineGraph.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
             @Override
             public String formatLabel(double value, boolean isValueX) {
@@ -305,23 +323,33 @@ public class GraphActivity extends AppCompatActivity {
         viewport.setScrollable(true);
 
         // bar graph
-        GraphView barGraph = (GraphView) findViewById(R.id.barGraph);
-        BarGraphSeries<DataPoint> barSeries = new BarGraphSeries<>(new DataPoint[] {
-                new DataPoint(0,2),
-                new DataPoint(1,5),
-                new DataPoint(2,3),
-                new DataPoint(3,2)
+        GraphView flowGraph = (GraphView) findViewById(R.id.barGraph);
+        List<Double> currentData = dataArray.get(dataArray.size()-1);
+        LineGraphSeries<DataPoint> flowSeries = new LineGraphSeries<DataPoint>(new DataPoint[] {
+                new DataPoint(0, currentData.get(0)),
         });
+        for (int i = 1; i < dates.size(); i++) {
+            flowSeries.appendData(new DataPoint(i, currentData.get(i)), true, 10);
 
-        barGraph.addSeries(barSeries);
+        }
 
-        barGraph.getViewport().setYAxisBoundsManual(true);
-        barGraph.getViewport().setMinY(0);
-        barGraph.getViewport().setMaxY(6);
-
-        barSeries.setSpacing(50);
-        barSeries.setDrawValuesOnTop(true);
-        barSeries.setValuesOnTopColor(Color.BLACK);
+        flowGraph.addSeries(flowSeries);
+//        BarGraphSeries<DataPoint> barSeries = new BarGraphSeries<>(new DataPoint[] {
+//                new DataPoint(0,2),
+//                new DataPoint(1,5),
+//                new DataPoint(2,3),
+//                new DataPoint(3,2)
+//        });
+//
+//        barGraph.addSeries(barSeries);
+//
+//        barGraph.getViewport().setYAxisBoundsManual(true);
+//        barGraph.getViewport().setMinY(0);
+//        barGraph.getViewport().setMaxY(6);
+//
+//        barSeries.setSpacing(50);
+//        barSeries.setDrawValuesOnTop(true);
+//        barSeries.setValuesOnTopColor(Color.BLACK);
 
         return true;
     }
