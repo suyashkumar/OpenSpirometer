@@ -4,7 +4,8 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.example.amyzhao.graphtest2.RecordActivity">
+    tools:context="com.example.amyzhao.graphtest2.RecordActivity"
+    android:background="@drawable/sunset">
 
 
     <TextView
@@ -13,7 +14,8 @@
         android:text="1. Breathe in as much as you can."
         android:id="@+id/line1"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="112dp" />
+        android:layout_marginTop="112dp"
+        android:textColor="#000" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -21,7 +23,8 @@
         android:text="2. Hit record on device."
         android:id="@+id/line2"
         android:layout_below="@+id/line1"
-        android:layout_alignStart="@+id/line1" />
+        android:layout_alignStart="@+id/line1"
+        android:textColor="#000" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -30,7 +33,8 @@
         android:id="@+id/line3"
         android:layout_below="@+id/line2"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:textColor="#000" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -39,16 +43,19 @@
         android:id="@+id/line4"
         android:layout_below="@+id/line3"
         android:layout_centerHorizontal="true"
-        android:layout_alignStart="@+id/line3"/>
+        android:layout_alignStart="@+id/line3"
+        android:textColor="#000" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Begin Recording"
         android:id="@+id/startButton"
-        android:layout_below="@+id/tags"
+        android:onClick="record"
+        android:layout_below="@+id/connect"
         android:layout_centerHorizontal="true"
-        android:onClick="record" />
+        android:background="#000"
+        android:textColor="#fff" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -59,15 +66,18 @@
         android:id="@+id/tags"
         android:layout_marginTop="62dp"
         android:layout_below="@+id/line4"
-        android:layout_alignEnd="@+id/line1" />
+        android:layout_alignEnd="@+id/line1"
+        android:textColor="#fff" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Connect Bluetooth"
         android:id="@+id/connect"
-        android:layout_below="@+id/startButton"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@+id/tags"
+        android:layout_centerHorizontal="true"
+        android:background="#000"
+        android:textColor="#fff" />
 
     <TextView
         android:layout_width="wrap_content"

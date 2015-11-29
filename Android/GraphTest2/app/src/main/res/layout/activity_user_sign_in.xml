@@ -4,7 +4,8 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.example.amyzhao.graphtest2.UserSignInActivity">
+    tools:context="com.example.amyzhao.graphtest2.UserSignInActivity"
+    android:background="@drawable/running">
 
     <EditText
         android:layout_width="wrap_content"
@@ -13,7 +14,8 @@
         android:ems="10"
         android:id="@+id/username"
         android:hint="Enter Username"
-        android:layout_centerVertical="true"
+        android:textColor="#000"
+        android:layout_above="@+id/loginButton"
         android:layout_centerHorizontal="true" />
 
     <Button
@@ -22,8 +24,11 @@
         android:text="Login"
         android:id="@+id/loginButton"
         android:onClick="login"
-        android:layout_below="@+id/username"
-        android:layout_centerHorizontal="true" />
+        android:background="#000"
+        android:textColor="#fff"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="56dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -32,6 +37,9 @@
         android:text="HomeSpiro"
         android:id="@+id/homeSpiro"
         android:layout_above="@+id/tags"
-        android:layout_alignEnd="@+id/loginButton" />
+        android:textColor="#24a0d0"
+        android:typeface="serif"
+        android:textSize="45dp"
+        android:layout_alignEnd="@+id/username" />
 
 </RelativeLayout>
