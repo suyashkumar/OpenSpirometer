@@ -79,6 +79,9 @@ public class GraphActivity extends AppCompatActivity {
         FEV = new ArrayList<Double>();
         FVC = new ArrayList<Double>();
         dates = new ArrayList<Integer>();
+        dataArray = new ArrayList<List<Double>>();
+        tagArray = new ArrayList<List<String>>();
+
     }
 
 
@@ -110,23 +113,20 @@ public class GraphActivity extends AppCompatActivity {
             for (int i=0;i<jArr.length();i++){
                 JSONObject currObj = jArr.getJSONObject(i);
                 recData.add(new SpiroData(currObj.toString()));
+
                 System.out.println(currObj.getDouble("FEV"));
                 FEV.add(currObj.getDouble("FEV"));
                 FVC.add(currObj.getDouble("FVC"));
                 dates.add(Integer.parseInt(currObj.getString("date")));
                 JSONArray tagJSON = currObj.getJSONArray("tags");
+
                 ArrayList<String> currentTagList = new ArrayList<String>();
                 for (int j = 0; j<tagJSON.length(); j++){
-                    currentTagList.add(tagJSON.get(j).toString());
+                    currentTagList.add(tagJSON.getString(j));
                 }
                 tagArray.add(currentTagList);
 
                 JSONArray dataJSON = currObj.getJSONArray("data");
-                ArrayList<Double> currentData = new ArrayList<Double>();
-                for (int j = 0; j<dataJSON.length(); j++){
-                    currentData.add((Double) dataJSON.get(j));
-                }
-                dataArray.add(currentData);
 
             }
             System.out.println(FEV);
@@ -271,20 +271,21 @@ public class GraphActivity extends AppCompatActivity {
 
         List<Double> ratio = new ArrayList<Double>();
         for (int i = 0; i < FEV.size(); i++) {
-            double r = FEV.get(i)/FVC.get(i);
+            double r = 100*FEV.get(i)/FVC.get(i);
             ratio.add(r);
         }
 
         // Line graph
         GraphView lineGraph = (GraphView) findViewById(R.id.lineGraph);
-        final HashMap<Integer, List<String>> tagMap = new HashMap<Integer, List<String>>();
+        //final HashMap<Integer, List<String>> tagMap = new HashMap<Integer, List<String>>();
         LineGraphSeries<DataPoint> lineSeries = new LineGraphSeries<DataPoint>(new DataPoint[] {
                 new DataPoint(dates.get(0), ratio.get(0)),
         });
-        tagMap.put(dates.get(0), tagArray.get(0));
+        //if (tagArray.size()>0) tagMap.put(dates.get(0), tagArray.get(0));
+
         for (int i = 1; i < dates.size(); i++) {
             lineSeries.appendData(new DataPoint(dates.get(i), ratio.get(i)), true, 10);
-            tagMap.put(dates.get(i), tagArray.get(i));
+            //if (tagArray.size()>0) tagMap.put(dates.get(i), tagArray.get(i));
 
         }
 
@@ -293,7 +294,12 @@ public class GraphActivity extends AppCompatActivity {
         lineSeries.setOnDataPointTapListener(new OnDataPointTapListener() {
             @Override
             public void onTap(Series series, DataPointInterface dataPointInterface) {
-                Toast.makeText(context, (CharSequence) (dataPointInterface.getY() + "%"+ tagMap.get(dataPointInterface.getX())), Toast.LENGTH_LONG).show();
+                //if (tagArray.size()>0) {
+                 //   Toast.makeText(context, (CharSequence) (dataPointInterface.getY() + "%" + tagMap.get(dataPointInterface.getX())), Toast.LENGTH_LONG).show();
+                //}
+               // else{
+                    Toast.makeText(context, (CharSequence) (dataPointInterface.getY() + "%"), Toast.LENGTH_LONG).show();
+               // }
             }
         });
 
@@ -324,7 +330,7 @@ public class GraphActivity extends AppCompatActivity {
 
         // bar graph
         GraphView flowGraph = (GraphView) findViewById(R.id.barGraph);
-        List<Double> currentData = dataArray.get(dataArray.size()-1);
+        List<Double> currentData = recData.get(recData.size()-1).data;
         LineGraphSeries<DataPoint> flowSeries = new LineGraphSeries<DataPoint>(new DataPoint[] {
                 new DataPoint(0, currentData.get(0)),
         });
