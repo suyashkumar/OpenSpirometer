@@ -8,26 +8,25 @@
 
     <com.jjoe64.graphview.GraphView
         android:layout_width="match_parent"
-        android:layout_height="200dip"
-        android:id="@+id/lineGraph"
-        android:layout_marginTop="140dp"
-        android:layout_below="@+id/recordButton"
+        android:layout_height="150dip"
+        android:id="@+id/barGraph"
+        android:layout_marginTop="167dp"
+        android:layout_below="@+id/fev1Normal"
         android:layout_alignParentStart="true" />
 
     <com.jjoe64.graphview.GraphView
         android:layout_width="match_parent"
-        android:layout_height="200dip"
-        android:id="@+id/barGraph"
-        android:layout_below="@+id/lineGraph"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="103dp" />
+        android:layout_height="350dip"
+        android:id="@+id/lineGraph"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Most Recent Results:"
         android:id="@+id/results"
-        android:layout_above="@+id/lineGraph"
+        android:layout_above="@+id/barGraph"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true" />
 
@@ -84,6 +83,25 @@
         android:id="@+id/date"
         android:layout_above="@+id/fev1Recent"
         android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Flow Rate vs Time for Most Recent Measurement"
+        android:id="@+id/barTitle"
+        android:layout_below="@+id/fvcNormal"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="39dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="History"
+        android:id="@+id/lineTitle"
+        android:layout_below="@+id/barGraph"
+        android:layout_toEndOf="@+id/fvcRecent" />
 
 
 </RelativeLayout>

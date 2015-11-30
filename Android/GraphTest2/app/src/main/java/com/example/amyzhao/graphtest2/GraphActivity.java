@@ -114,36 +114,39 @@ public class GraphActivity extends AppCompatActivity {
                 JSONObject currObj = jArr.getJSONObject(i);
                 recData.add(new SpiroData(currObj.toString()));
 
-                System.out.println(currObj.getDouble("FEV"));
+                System.out.println("hello");
+                //System.out.println(currObj.getDouble("FEV"));
                 FEV.add(currObj.getDouble("FEV"));
                 FVC.add(currObj.getDouble("FVC"));
                 dates.add(Integer.parseInt(currObj.getString("date")));
-                JSONArray tagJSON = currObj.getJSONArray("tags");
+
+                JSONObject paramObj = currObj.getJSONObject("params");
+                JSONArray tagJSON = paramObj.getJSONArray("tags");
 
                 ArrayList<String> currentTagList = new ArrayList<String>();
                 for (int j = 0; j<tagJSON.length(); j++){
                     currentTagList.add(tagJSON.getString(j));
                 }
+
                 tagArray.add(currentTagList);
 
                 JSONArray dataJSON = currObj.getJSONArray("data");
 
             }
-            System.out.println(FEV);
-            System.out.println(FVC);
-            System.out.println(dates);
+            //System.out.println(FEV);
+            //System.out.println(FVC);
+            //System.out.println(dates);
             //FVC and FEV are arraylists with the data
 
             //System.out.println("Stuff: "+jArr.getJSONObject(0).getString("date"));
 
         } catch (JSONException e) {
             e.printStackTrace();
+            //System.out.println("caught");
         }
 
         generateGraphs(FEV, FVC);
-        System.out.println("tryna update UI");
         updateUI();
-        System.out.println("updated UI");
     }
 
     public void updateUI() {
@@ -272,21 +275,21 @@ public class GraphActivity extends AppCompatActivity {
         List<Double> ratio = new ArrayList<Double>();
         for (int i = 0; i < FEV.size(); i++) {
             double r = 100*FEV.get(i)/FVC.get(i);
+            System.out.println(r);
             ratio.add(r);
         }
 
         // Line graph
         GraphView lineGraph = (GraphView) findViewById(R.id.lineGraph);
-        //final HashMap<Integer, List<String>> tagMap = new HashMap<Integer, List<String>>();
+        final HashMap<Integer, List<String>> tagMap = new HashMap<Integer, List<String>>();
         LineGraphSeries<DataPoint> lineSeries = new LineGraphSeries<DataPoint>(new DataPoint[] {
                 new DataPoint(dates.get(0), ratio.get(0)),
         });
-        //if (tagArray.size()>0) tagMap.put(dates.get(0), tagArray.get(0));
+        if (tagArray.size()>0) tagMap.put(dates.get(0), tagArray.get(0));
 
         for (int i = 1; i < dates.size(); i++) {
             lineSeries.appendData(new DataPoint(dates.get(i), ratio.get(i)), true, 10);
-            //if (tagArray.size()>0) tagMap.put(dates.get(i), tagArray.get(i));
-
+            if (tagArray.size()>0) tagMap.put(dates.get(i), tagArray.get(i));
         }
 
         lineGraph.addSeries(lineSeries);
@@ -294,12 +297,12 @@ public class GraphActivity extends AppCompatActivity {
         lineSeries.setOnDataPointTapListener(new OnDataPointTapListener() {
             @Override
             public void onTap(Series series, DataPointInterface dataPointInterface) {
-                //if (tagArray.size()>0) {
-                 //   Toast.makeText(context, (CharSequence) (dataPointInterface.getY() + "%" + tagMap.get(dataPointInterface.getX())), Toast.LENGTH_LONG).show();
-                //}
-               // else{
+                if (tagArray.size()>0) {
+                    Toast.makeText(context, (CharSequence) (dataPointInterface.getY() + "%" + tagMap.get(dataPointInterface.getX())), Toast.LENGTH_LONG).show();
+                }
+                else{
                     Toast.makeText(context, (CharSequence) (dataPointInterface.getY() + "%"), Toast.LENGTH_LONG).show();
-               // }
+                }
             }
         });
 
@@ -317,6 +320,9 @@ public class GraphActivity extends AppCompatActivity {
                 }
             }
         });
+
+        lineGraph.getGridLabelRenderer().setHorizontalAxisTitle("Date");
+        lineGraph.getGridLabelRenderer().setVerticalAxisTitle("FEV1/FVC (%)");
 /*
         viewport.setXAxisBoundsManual(true);
         viewport.setMinX(0);
@@ -324,9 +330,10 @@ public class GraphActivity extends AppCompatActivity {
 */
         viewport.setYAxisBoundsManual(true);
         viewport.setMinY(0);
-        viewport.setMaxY(2);
+        viewport.setMaxY(100);
 
         viewport.setScrollable(true);
+
 
         // bar graph
         GraphView flowGraph = (GraphView) findViewById(R.id.barGraph);
@@ -334,12 +341,26 @@ public class GraphActivity extends AppCompatActivity {
         LineGraphSeries<DataPoint> flowSeries = new LineGraphSeries<DataPoint>(new DataPoint[] {
                 new DataPoint(0, currentData.get(0)),
         });
-        for (int i = 1; i < dates.size(); i++) {
-            flowSeries.appendData(new DataPoint(i, currentData.get(i)), true, 10);
+        for (int i = 1; i < currentData.size(); i++) {
+            flowSeries.appendData(new DataPoint(i, currentData.get(i)), true, currentData.size());
 
         }
 
         flowGraph.addSeries(flowSeries);
+
+        Viewport viewport2 = flowGraph.getViewport();
+        viewport2.setXAxisBoundsManual(true);
+        viewport2.setMinX(0);
+        viewport2.setMaxX(50);
+        viewport2.setYAxisBoundsManual(true);
+        viewport2.setMinY(0);
+        viewport2.setMaxY(1.2);
+
+        viewport2.setScrollable(true);
+
+        flowGraph.getGridLabelRenderer().setHorizontalAxisTitle("Measurement");
+        flowGraph.getGridLabelRenderer().setVerticalAxisTitle("Flow Rate");
+
 //        BarGraphSeries<DataPoint> barSeries = new BarGraphSeries<>(new DataPoint[] {
 //                new DataPoint(0,2),
 //                new DataPoint(1,5),
