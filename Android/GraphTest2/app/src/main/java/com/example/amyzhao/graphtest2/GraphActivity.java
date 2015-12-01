@@ -133,6 +133,7 @@ public class GraphActivity extends AppCompatActivity {
                 JSONArray dataJSON = currObj.getJSONArray("data");
 
             }
+            System.out.println(Arrays.toString(tagArray.toArray()));
             //System.out.println(FEV);
             //System.out.println(FVC);
             //System.out.println(dates);
@@ -288,17 +289,39 @@ public class GraphActivity extends AppCompatActivity {
         if (tagArray.size()>0) tagMap.put(dates.get(0), tagArray.get(0));
 
         for (int i = 1; i < dates.size(); i++) {
-            lineSeries.appendData(new DataPoint(dates.get(i), ratio.get(i)), true, 10);
+            lineSeries.appendData(new DataPoint(dates.get(i), ratio.get(i)), true, dates.size());
             if (tagArray.size()>0) tagMap.put(dates.get(i), tagArray.get(i));
         }
 
+        System.out.print("number of dates: ");
+        System.out.println(dates.size());
+        System.out.println(Arrays.toString(dates.toArray()));
         lineGraph.addSeries(lineSeries);
 
         lineSeries.setOnDataPointTapListener(new OnDataPointTapListener() {
             @Override
             public void onTap(Series series, DataPointInterface dataPointInterface) {
                 if (tagArray.size()>0) {
-                    Toast.makeText(context, (CharSequence) (dataPointInterface.getY() + "%" + tagMap.get(dataPointInterface.getX())), Toast.LENGTH_LONG).show();
+                    List<String> tags = tagMap.get((int) dataPointInterface.getX());
+                    if (tags != null && tags.size() > 0) {
+                        System.out.println(Arrays.toString(tags.toArray()));
+                        StringBuilder t = new StringBuilder();
+                        for (int i = 0; i < tags.size(); i++) {
+                            System.out.println(tags.get(i));
+                            t.append(tags.get(i));
+                            if (i < tags.size()-1) {
+                                t.append(", ");
+                            }
+                            System.out.println(t.toString());
+                            System.out.println(t.length());
+                        }
+                        if (t.length() > 0) {
+                            Toast.makeText(context, (CharSequence) (dataPointInterface.getY() + "% - " + t.toString()), Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(context, (CharSequence) (dataPointInterface.getY() + "% - no tags"), Toast.LENGTH_LONG).show();
+                        }
+                        System.out.println(dataPointInterface.getX());
+                    }
                 }
                 else{
                     Toast.makeText(context, (CharSequence) (dataPointInterface.getY() + "%"), Toast.LENGTH_LONG).show();
@@ -342,12 +365,12 @@ public class GraphActivity extends AppCompatActivity {
                 new DataPoint(0, currentData.get(0)),
         });
         for (int i = 1; i < currentData.size(); i++) {
-            flowSeries.appendData(new DataPoint(i, currentData.get(i)), true, currentData.size());
+            flowSeries.appendData(new DataPoint(0.02*i, currentData.get(i)), true, currentData.size());
 
         }
 
         flowGraph.addSeries(flowSeries);
-
+/*
         Viewport viewport2 = flowGraph.getViewport();
         viewport2.setXAxisBoundsManual(true);
         viewport2.setMinX(0);
@@ -357,26 +380,9 @@ public class GraphActivity extends AppCompatActivity {
         viewport2.setMaxY(1.2);
 
         viewport2.setScrollable(true);
-
-        flowGraph.getGridLabelRenderer().setHorizontalAxisTitle("Measurement");
-        flowGraph.getGridLabelRenderer().setVerticalAxisTitle("Flow Rate");
-
-//        BarGraphSeries<DataPoint> barSeries = new BarGraphSeries<>(new DataPoint[] {
-//                new DataPoint(0,2),
-//                new DataPoint(1,5),
-//                new DataPoint(2,3),
-//                new DataPoint(3,2)
-//        });
-//
-//        barGraph.addSeries(barSeries);
-//
-//        barGraph.getViewport().setYAxisBoundsManual(true);
-//        barGraph.getViewport().setMinY(0);
-//        barGraph.getViewport().setMaxY(6);
-//
-//        barSeries.setSpacing(50);
-//        barSeries.setDrawValuesOnTop(true);
-//        barSeries.setValuesOnTopColor(Color.BLACK);
+*/
+        flowGraph.getGridLabelRenderer().setHorizontalAxisTitle("Time (s)");
+        flowGraph.getGridLabelRenderer().setVerticalAxisTitle("Flow Rate (L/s)");
 
         return true;
     }
