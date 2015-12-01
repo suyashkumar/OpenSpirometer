@@ -48,7 +48,7 @@ public class ResultsActivity extends AppCompatActivity {
         username = extra.getString("username");
         FEV = extra.getDouble("FEV");
         FVC = extra.getDouble("FVC");
-        ratio = FEV/FVC;
+        ratio = FEV/FVC*100;
         System.out.println(username);
         URL = "http://spiro.suyash.io/api/" + username;
         System.out.println(URL);
@@ -111,6 +111,11 @@ public class ResultsActivity extends AppCompatActivity {
         FEVText.setText(Double.toString(fev1Val));
         FVCText.setText(Double.toString(fvcVal));
         ratioText.setText(String.valueOf(ratio));
+
+        if(ratio < 70) {
+            TextView warning = (TextView) findViewById(R.id.warning);
+            warning.setVisibility(View.VISIBLE);
+        }
     }
 
     public static double round(double value, int places) {
@@ -122,12 +127,16 @@ public class ResultsActivity extends AppCompatActivity {
     }
 
     public void toRecord(View view) {
+        TextView warning = (TextView) findViewById(R.id.warning);
+        warning.setVisibility(View.INVISIBLE);
         Intent intent = new Intent(getApplicationContext(), RecordActivity.class);
         intent.putExtra("username", username);
         startActivity(intent);
     }
 
     public void toGraph(View view) {
+        TextView warning = (TextView) findViewById(R.id.warning);
+        warning.setVisibility(View.INVISIBLE);
         Intent intent = new Intent(getApplicationContext(), GraphActivity.class);
         intent.putExtra("username", username);
         startActivity(intent);

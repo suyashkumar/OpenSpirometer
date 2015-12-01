@@ -145,4 +145,15 @@
         android:layout_alignStart="@+id/FEVnorm"
         android:textColor="#000" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="WARNING: Your FEV/FVC ratio is a little low!"
+        android:id="@+id/warning"
+        android:visibility="invisible"
+        android:layout_above="@+id/retryButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="136dp" />
+
 </RelativeLayout>

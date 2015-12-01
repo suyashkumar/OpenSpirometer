@@ -303,7 +303,6 @@ public class RecordActivity extends AppCompatActivity {
 
        //TODO: Suyash change content to actual thing
         String data = "blabla";
-        //content = "{\"clubhash\":\"100457d41b9-ab22-4825-9393-ac7f6e8ff961\",\"username\":\"anonymous\",\"message\":\"simply awesome\",\"timestamp\":\"2012/11/05 13:00:00\"}";
        content = currentDataObject.toJSONString();
        System.out.println("JSON POST String: "+content);
        postDataToServer();
