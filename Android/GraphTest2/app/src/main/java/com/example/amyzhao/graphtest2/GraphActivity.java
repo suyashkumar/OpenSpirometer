@@ -139,11 +139,13 @@ public class GraphActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        if (FEV.size()!=0) {
+            generateGraphs(FEV, FVC);
+            System.out.println("tryna update UI");
+            updateUI();
+            System.out.println("updated UI");
+        }
 
-        generateGraphs(FEV, FVC);
-        System.out.println("tryna update UI");
-        updateUI();
-        System.out.println("updated UI");
     }
 
     public void updateUI() {
