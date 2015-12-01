@@ -53,9 +53,7 @@
         android:id="@+id/startButton"
         android:onClick="record"
         android:layout_below="@+id/connect"
-        android:layout_centerHorizontal="true"
-        android:background="#000"
-        android:textColor="#fff" />
+        android:layout_centerHorizontal="true" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -76,9 +74,7 @@
         android:text="Connect Bluetooth"
         android:id="@+id/connect"
         android:layout_below="@+id/tags"
-        android:layout_centerHorizontal="true"
-        android:background="#000"
-        android:textColor="#fff" />
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="wrap_content"
