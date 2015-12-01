@@ -107,6 +107,7 @@ public class ResultsActivity extends AppCompatActivity {
 
         Double fev1Val = round(FEV, 2);
         Double fvcVal = round(FVC, 2);
+        ratio = round(ratio, 2);
 
         FEVText.setText(Double.toString(fev1Val));
         FVCText.setText(Double.toString(fvcVal));

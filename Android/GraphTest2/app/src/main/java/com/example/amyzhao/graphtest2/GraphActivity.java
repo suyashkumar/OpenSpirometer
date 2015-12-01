@@ -109,8 +109,10 @@ public class GraphActivity extends AppCompatActivity {
         //parse ratios from data
         System.out.println("HI PARSINGDATA FROM SERVER");
         try {
+            System.out.println("trying");
             JSONArray jArr = new JSONArray(content);
             for (int i=0;i<jArr.length();i++){
+                System.out.println("tryna get a json object");
                 JSONObject currObj = jArr.getJSONObject(i);
                 recData.add(new SpiroData(currObj.toString()));
 
@@ -143,7 +145,7 @@ public class GraphActivity extends AppCompatActivity {
 
         } catch (JSONException e) {
             e.printStackTrace();
-            //System.out.println("caught");
+            System.out.println("caught");
         }
 
         generateGraphs(FEV, FVC);
@@ -160,6 +162,9 @@ public class GraphActivity extends AppCompatActivity {
         Double fev1Val = round(FEV.get(FEV.size()-1), 2);
         Double fvcVal = round(FVC.get(FVC.size()-1), 2);
         String dateVal = dateToString(dates.get(dates.size()-1));
+
+        System.out.println(Arrays.toString(FEV.toArray()));
+        System.out.println(Arrays.toString(FVC.toArray()));
 
         String fevText = "FEV1: " + Double.toString(fev1Val);
         String fvcText = "FVC: " + Double.toString(fvcVal);
@@ -284,11 +289,11 @@ public class GraphActivity extends AppCompatActivity {
         GraphView lineGraph = (GraphView) findViewById(R.id.lineGraph);
         final HashMap<Integer, List<String>> tagMap = new HashMap<Integer, List<String>>();
         LineGraphSeries<DataPoint> lineSeries = new LineGraphSeries<DataPoint>(new DataPoint[] {
-                new DataPoint(dates.get(0), ratio.get(0)),
+                //new DataPoint(dates.get(0), ratio.get(0)),
         });
         if (tagArray.size()>0) tagMap.put(dates.get(0), tagArray.get(0));
 
-        for (int i = 1; i < dates.size(); i++) {
+        for (int i = 0; i < dates.size(); i++) {
             lineSeries.appendData(new DataPoint(dates.get(i), ratio.get(i)), true, dates.size());
             if (tagArray.size()>0) tagMap.put(dates.get(i), tagArray.get(i));
         }
@@ -350,9 +355,9 @@ public class GraphActivity extends AppCompatActivity {
         lineGraph.getGridLabelRenderer().setVerticalAxisTitle("FEV1/FVC (%)");
 
 
-        viewport.setXAxisBoundsManual(false);
-        //viewport.setMinX(0);
-        //viewport.setMaxX(40);
+        viewport.setXAxisBoundsManual(true);
+        viewport.setMinX(viewport.getMaxX(true)-86400/24/2);
+        viewport.setMaxX(viewport.getMaxX(true));
 
         viewport.setYAxisBoundsManual(true);
         viewport.setMinY(0);
