@@ -76,12 +76,4 @@
         android:layout_below="@+id/tags"
         android:layout_centerHorizontal="true" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New Text"
-        android:id="@+id/testText"
-        android:layout_below="@+id/connect"
-        android:layout_centerHorizontal="true" />
-
 </RelativeLayout>

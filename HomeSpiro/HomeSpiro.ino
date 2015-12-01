@@ -39,7 +39,6 @@
 
       float Vi_avg_float = ((float) Vi_sum)/30;
       int Vi_avg = (int) Vi_avg_float;    
-       
       data[400]={};  //reset data array
       measure(Vi_avg);      
       sendData();
@@ -58,7 +57,6 @@ void measure(int Vi_avg){
       int time1 = millis();
       if (zeroCounter>doneLength) break;        //user is done breathing
       int V_in = analogRead(spiro)-Vi_avg;          //auto offset
- 
      
      if (V_in>threshold || breathStarted == true){ //only start counting when value is above threshold
         data[i] = V_in;

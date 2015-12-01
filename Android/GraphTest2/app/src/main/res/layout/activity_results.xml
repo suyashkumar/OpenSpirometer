@@ -10,17 +10,6 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Retry"
-        android:id="@+id/retryButton"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:onClick="toRecord"
-        android:textColor="#fff"
-        android:background="#000" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="See Graphs"
         android:id="@+id/graphsButton"
         android:layout_alignParentBottom="true"
@@ -151,9 +140,8 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="WARNING: Your FEV/FVC ratio is a little low!"
         android:id="@+id/warning"
-        android:visibility="invisible"
-        android:layout_above="@+id/retryButton"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="136dp" />
+        android:visibility="visible"
+        android:layout_below="@+id/resultsText"
+        android:gravity="center"/>
 
 </RelativeLayout>

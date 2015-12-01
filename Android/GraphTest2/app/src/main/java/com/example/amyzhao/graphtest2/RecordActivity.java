@@ -172,13 +172,13 @@ public class RecordActivity extends AppCompatActivity {
                                     final String data = new String(encodedBytes, "US-ASCII");
                                     System.out.println(data);
 
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            TextView test = (TextView) findViewById(R.id.testText);
-                                            test.setText(data);
-                                        }
-                                    });
+//                                    runOnUiThread(new Runnable() {
+//                                        @Override
+//                                        public void run() {
+//                                            TextView test = (TextView) findViewById(R.id.testText);
+//                                            test.setText(data);
+//                                        }
+//                                    });
 
                                     readBufferPosition = 0;
 

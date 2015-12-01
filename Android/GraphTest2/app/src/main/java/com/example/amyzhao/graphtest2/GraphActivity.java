@@ -154,9 +154,6 @@ public class GraphActivity extends AppCompatActivity {
             System.out.println("updated UI");
         }
 
-
-        generateGraphs(FEV, FVC);
-        updateUI();
     }
 
     public void updateUI() {
