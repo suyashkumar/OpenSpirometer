@@ -327,9 +327,9 @@ public class GraphActivity extends AppCompatActivity {
                             System.out.println(t.length());
                         }
                         if (t.length() > 0) {
-                            Toast.makeText(context, (CharSequence) (dataPointInterface.getY() + "% - " + t.toString()), Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, (CharSequence) (round(dataPointInterface.getY(), 2) + "% - " + t.toString()), Toast.LENGTH_LONG).show();
                         } else {
-                            Toast.makeText(context, (CharSequence) (dataPointInterface.getY() + "% - no tags"), Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, (CharSequence) (round(dataPointInterface.getY(), 2) + "% - no tags"), Toast.LENGTH_LONG).show();
                         }
                         System.out.println(dataPointInterface.getX());
                     }
@@ -344,7 +344,7 @@ public class GraphActivity extends AppCompatActivity {
 
         Locale l = new Locale("en", "US");
         //final java.text.DateFormat dateTimeFormatter = DateFormat.getDateFormat(this);
-        final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd\nHH:mm:ss");
+        final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd\nHH:mm");
         lineGraph.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
             @Override
             public String formatLabel(double value, boolean isValueX) {

@@ -11,40 +11,43 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="1. Breathe in as much as you can."
+        android:text="1. Connect Bluetooth."
         android:id="@+id/line1"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="112dp"
-        android:textColor="#000" />
+        android:layout_marginTop="114dp"
+        android:textColor="#000"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/line2"
+        android:textSize="20dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="2. Hit record on device."
+        android:text="2. Inhale fully."
         android:id="@+id/line2"
+        android:textColor="#000"
         android:layout_below="@+id/line1"
-        android:layout_alignStart="@+id/line1"
-        android:textColor="#000" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="3. Breath out as much as you can."
-        android:id="@+id/line3"
-        android:layout_below="@+id/line2"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:textColor="#000" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="4. Hit stop recording when you can't expire anymore."
-        android:id="@+id/line4"
-        android:layout_below="@+id/line3"
-        android:layout_centerHorizontal="true"
         android:layout_alignStart="@+id/line3"
-        android:textColor="#000" />
+        android:textSize="20dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="3. Hit &quot;Begin Recording.&quot;"
+        android:id="@+id/line3"
+        android:textColor="#000"
+        android:textSize="20dp"
+        android:layout_below="@+id/line2"
+        android:layout_alignEnd="@+id/startButton" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="4. Breath out as much as you can."
+        android:id="@+id/line4"
+        android:textColor="#000"
+        android:textSize="20dp"
+        android:layout_below="@+id/line3"
+        android:layout_alignStart="@+id/line3" />
 
     <Button
         android:layout_width="wrap_content"
@@ -62,11 +65,11 @@
         android:hint="Enter Tags"
         android:ems="10"
         android:id="@+id/tags"
-        android:layout_marginTop="62dp"
-        android:layout_below="@+id/line4"
-        android:layout_alignEnd="@+id/line1"
+        android:layout_marginTop="57dp"
         android:textColor="#000"
-        android:textColorHint="#000" />
+        android:textColorHint="#000"
+        android:layout_below="@+id/line4"
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:layout_width="wrap_content"
@@ -74,6 +77,17 @@
         android:text="Connect Bluetooth"
         android:id="@+id/connect"
         android:layout_below="@+id/tags"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="To Take a New Measurement:"
+        android:id="@+id/textView"
+        android:textSize="40dp"
+        android:gravity="center"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
