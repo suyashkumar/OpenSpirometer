@@ -296,6 +296,8 @@ public class GraphActivity extends AppCompatActivity {
         System.out.print("number of dates: ");
         System.out.println(dates.size());
         System.out.println(Arrays.toString(dates.toArray()));
+        lineSeries.setDrawDataPoints(true);
+        lineSeries.setDataPointsRadius(5);
         lineGraph.addSeries(lineSeries);
 
         lineSeries.setOnDataPointTapListener(new OnDataPointTapListener() {
@@ -346,11 +348,12 @@ public class GraphActivity extends AppCompatActivity {
 
         lineGraph.getGridLabelRenderer().setHorizontalAxisTitle("Date");
         lineGraph.getGridLabelRenderer().setVerticalAxisTitle("FEV1/FVC (%)");
-/*
-        viewport.setXAxisBoundsManual(true);
-        viewport.setMinX(0);
-        viewport.setMaxX(40);
-*/
+
+
+        viewport.setXAxisBoundsManual(false);
+        //viewport.setMinX(0);
+        //viewport.setMaxX(40);
+
         viewport.setYAxisBoundsManual(true);
         viewport.setMinY(0);
         viewport.setMaxY(100);
