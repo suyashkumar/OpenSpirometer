@@ -14,7 +14,7 @@
   float Vi_avg_float;
   int Vi_avg;
   int data[400]={};
-  int threshold=10; //0.05 V offset from baseline
+  int threshold=8; //0.05 V offset from baseline
   int doneLength = 100; //2 seconds of zeros = done
   
 
@@ -30,14 +30,13 @@
     }
 
     Vi_avg_float = ((float) Vi_sum)/30;
-    Vi_avg = (int) Vi_avg_float;
-    
+    Vi_avg = (int) Vi_avg_float;    
   }
 
   
   void loop(){
        
-   if (Serial.available()>0){
+     if (Serial.available()>0){
      char incomingByte;
      incomingByte = Serial.read();
     if (incomingByte == '0'){
@@ -74,9 +73,10 @@ void measure(){
      int time2 = millis();
      int timeElapsed = time2-time1;
      delay(20-timeElapsed);                        //50 Hz sample rate = 20 ms period
-     //int testTime = millis();
-     //int samplePeriod = testTime-time1;
-     //Serial.println(samplePeriod);  
+    // int testTime = millis();
+    // int samplePeriod = testTime-time1;
+    // Serial.print(samplePeriod);  
+    // Serial.print(", ");
   }
 }
 
