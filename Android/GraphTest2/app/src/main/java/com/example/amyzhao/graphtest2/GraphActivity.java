@@ -338,13 +338,15 @@ public class GraphActivity extends AppCompatActivity {
 
         Viewport viewport = lineGraph.getViewport();
 
-        final java.text.DateFormat dateTimeFormatter = DateFormat.getDateFormat(this);
+        Locale l = new Locale("en", "US");
+        //final java.text.DateFormat dateTimeFormatter = DateFormat.getDateFormat(this);
+        final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd\nHH:mm:ss");
         lineGraph.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
             @Override
             public String formatLabel(double value, boolean isValueX) {
                 if (isValueX) {
                     // transform number to time
-                    return dateTimeFormatter.format(new Date((long) value * 1000));
+                    return sdf.format(new Date((long) value * 1000));
                 } else {
                     return super.formatLabel(value, isValueX);
                 }
@@ -353,11 +355,14 @@ public class GraphActivity extends AppCompatActivity {
 
         lineGraph.getGridLabelRenderer().setHorizontalAxisTitle("Date");
         lineGraph.getGridLabelRenderer().setVerticalAxisTitle("FEV1/FVC (%)");
+        lineGraph.getGridLabelRenderer().setLabelHorizontalHeight(40);
 
+        double prev_hour = viewport.getMaxX(true) - (viewport.getMaxX(true) % 900);
+        double next_hour = prev_hour + 900;
 
         viewport.setXAxisBoundsManual(true);
-        viewport.setMinX(viewport.getMaxX(true)-86400/24/2);
-        viewport.setMaxX(viewport.getMaxX(true));
+        viewport.setMinX(prev_hour);
+        viewport.setMaxX(next_hour);
 
         viewport.setYAxisBoundsManual(true);
         viewport.setMinY(0);
