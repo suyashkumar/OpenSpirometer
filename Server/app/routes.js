@@ -9,14 +9,14 @@ var routing = function (app,mongoose){
 
 		res.send("Boom");
 	});
-
-	app.post('/api/:u/pushData',function(req,res){
-		console.log("Post data for user " + req.params.u);
-		console.log(req.body);
-		console.log(req.body.data);
-		//var currData= spiroTest({data:req.body.data,date:req.body.date,params:req.body.params});
-		//currData.save(function(err){if(err) throw err; console.log("saved");});
-		User.findOne({name:req.params.u}, function(err,currUser){
+	/*
+	 *	POST /api/:user/pushData
+	 *	Adds POST'd object to the given user's tests array. If new user, creates new user and does the same. 
+	 */
+	app.post('/api/:user/pushData',function(req,res){
+		console.log("Post data for user " + req.params.user);
+		console.log(req.body); 
+		User.findOne({name:req.params.user}, function(err,currUser){
 			if(err){
 				throw err;
 			}
@@ -24,7 +24,7 @@ var routing = function (app,mongoose){
 				console.log("Adding new user");
 			
 				currUser = User({
-					name:req.params.u,
+					name:req.params.user,
 					tests:[]
 					});
 				currUser.tests.push(req.body);	
@@ -37,6 +37,7 @@ var routing = function (app,mongoose){
 		});	
 		res.send("OK");
 	});
+
 	app.get('/users',function(req,res){
 		User.find({},function(err,data){
 			if (err) throw err;
@@ -45,6 +46,23 @@ var routing = function (app,mongoose){
 			res.json(data);
 			});
 
+	});
+	/*
+	 * GET /api/:user/data
+	 * Returns all data for the given user (all data under the tests array)
+	 */
+	app.get('/api/:user/data',function(req, res){
+		User.findOne({name:req.params.user}, function(err, currUser){
+			console.log(currUser);
+			if (currUser){ 
+				console.log(currUser);
+				res.json(currUser.tests);	
+				
+			}
+			else{
+				res.send("Not a user.");
+			}
+		});
 	});
 
 }
