@@ -173,7 +173,6 @@ public class GraphActivity extends AppCompatActivity {
         return bd.doubleValue();
     }
 
-    //TODO: Amy
     //Method to get data from server
     public void getDataFromServer() {
         ConnectivityManager connectivityManager = (ConnectivityManager)

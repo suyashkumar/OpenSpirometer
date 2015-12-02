@@ -62,9 +62,7 @@ public class RecordActivity extends AppCompatActivity {
 
         Bundle extra = getIntent().getExtras();
         username = extra.getString("username");
-        System.out.println(username);
         URL = "http://spiro.suyash.io/api/" + username;
-        System.out.println(URL);
 
         receivedData =new StringBuffer();
         Button openButton = (Button)findViewById(R.id.connect);
@@ -78,15 +76,12 @@ public class RecordActivity extends AppCompatActivity {
                 catch (IOException ex) { }
             }
         });
-
-
     }
 
     void findBT() {
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if(mBluetoothAdapter == null) {
-            //
-            // myLabel.setText("No bluetooth adapter available");
+
         }
 
         if(!mBluetoothAdapter.isEnabled()) {
@@ -103,7 +98,6 @@ public class RecordActivity extends AppCompatActivity {
                 }
             }
         }
-        //myLabel.setText("Bluetooth Device Found");
     }
 
     void openBT() throws IOException {
@@ -112,9 +106,6 @@ public class RecordActivity extends AppCompatActivity {
         mmSocket.connect();
         mmOutputStream = mmSocket.getOutputStream();
         mmInputStream = mmSocket.getInputStream();
-        //beginListenForData();
-        //myLabel.setText("Bluetooth Opened");
-
     }
 
     void closeBT() throws IOException {
@@ -170,21 +161,11 @@ public class RecordActivity extends AppCompatActivity {
                                     byte[] encodedBytes = new byte[readBufferPosition];
                                     System.arraycopy(readBuffer, 0, encodedBytes, 0, encodedBytes.length);
                                     final String data = new String(encodedBytes, "US-ASCII");
-                                    System.out.println(data);
-
-//                                    runOnUiThread(new Runnable() {
-//                                        @Override
-//                                        public void run() {
-//                                            TextView test = (TextView) findViewById(R.id.testText);
-//                                            test.setText(data);
-//                                        }
-//                                    });
 
                                     readBufferPosition = 0;
 
                                     handler.post(new Runnable() {
                                         public void run() {
-                                            //myLabel.setText(data);
                                             receivedData.append(data);
                                             System.out.println(data);
 
@@ -194,7 +175,6 @@ public class RecordActivity extends AppCompatActivity {
                                             System.out.println(Arrays.toString(tags));
                                             System.out.println(Arrays.toString(parsedData));
                                             calculateAndSend(parsedData, tags);
-                                            // Call Future functions
                                         }
                                     });
                                 }
@@ -274,8 +254,7 @@ public class RecordActivity extends AppCompatActivity {
        int dateInt = (int) (System.currentTimeMillis()/1000L);
        date=Integer.toString(dateInt);
 
-        //TODO: Suyash
-        //compile string of all necessary data (flowRates, FVC, FEV, ratio, tags)
+       //compile string of all necessary data (flowRates, FVC, FEV, ratio, tags)
        SpiroData currentDataObject = new SpiroData();
        currentDataObject.FEV = FEV;
        currentDataObject.FVC = FVC;
@@ -308,7 +287,6 @@ public class RecordActivity extends AppCompatActivity {
        postDataToServer();
     }
 
-    //TODO: Amy
     //Method to post data to server
     public void postDataToServer() {
         ConnectivityManager connectivityManager = (ConnectivityManager)
@@ -318,7 +296,7 @@ public class RecordActivity extends AppCompatActivity {
             new postInfoTask().execute(username);
         } else {
             // error
-            System.out.println("no connection :(");
+            System.out.println("No connection.");
         }
      }
 
@@ -353,13 +331,10 @@ public class RecordActivity extends AppCompatActivity {
             String urlToUse = URL + "/pushData";
             System.out.println(urlToUse);
             URL url = new URL(urlToUse);
-            //String urlParameters="{\"clubhash\":\"100457d41b9-ab22-4825-9393-ac7f6e8ff961\",\"username\":\"anonymous\",\"message\":\"simply awesome\",\"timestamp\":\"2012/11/05 13:00:00\"}";
 
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("POST");
             con.setRequestProperty("Content-Type", "application/json");
-            //con.setRequestProperty("Content-Length", "" +
-            //Integer.toString(urlParameters.getBytes().length));
             con.setRequestProperty("Content-Language", "en-US");
 
             con.setDoOutput(true);
