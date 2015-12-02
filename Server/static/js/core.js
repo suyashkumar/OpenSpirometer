@@ -29,6 +29,7 @@ spiroApp.controller("mainController", function($scope,$http,user){
  }); 
 spiroApp.controller("dashboardController", function($scope, $http, user){
 	$scope.username=user.getUser();	
+	if ($scope.username=="") window.location='#/';
 	$http.get('/api/'+$scope.username+"/data").success(function(data){
 		// Get data
 	makeOverviewGraph(data);
