@@ -41,8 +41,9 @@ var makeOverviewGraph = function(data) {
 	for(i=0;i<data.length;i++){
 		dataPoints.push({x: parseInt(data[i].date), y: data[i].FEV/data[i].FVC });	
 	}
-	console.log(dataPoints);
-	console.log(dataPoints.length);
+	
+	var graphData = { values : dataPoints, key: "FEV/FVC" }
+
 	nv.addGraph(function() {
   var chart = nv.models.lineChart()
                 .margin({left: 100})  //Adjust chart margins to give the x-axis some breathing room.
@@ -52,19 +53,16 @@ var makeOverviewGraph = function(data) {
                 .showXAxis(true)        //Show the x-axis
   ;
 
-  chart.xAxis     //Chart x-axis settings
-      .axisLabel('Time (ms)')
-      .tickFormat(d3.format(',r'));
 
-  chart.yAxis     //Chart y-axis settings
-      .axisLabel('Voltage (v)')
-      .tickFormat(d3.format('.02f'));
+
+
+
 
   /* Done setting the chart up? Time to render it!*/
   
 
   d3.select('#mainGraph svg')    //Select the <svg> element you want to render the chart in.   
-      .datum(dataPoints)         //Populate the <svg> element with chart data...
+      .datum([graphData])         //Populate the <svg> element with chart data...
       .call(chart);          //Finally, render the chart!
 
   //Update the chart when window resizes.
