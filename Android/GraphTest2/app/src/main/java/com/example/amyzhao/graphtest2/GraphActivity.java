@@ -70,9 +70,7 @@ public class GraphActivity extends AppCompatActivity {
 
         Bundle extra = getIntent().getExtras();
         username = extra.getString("username");
-        System.out.println(username);
         URL = "http://spiro.suyash.io/api/" + username;
-        System.out.println(URL);
         getDataFromServer();
         recData = new ArrayList<SpiroData>();
         GraphActivity.context = getApplicationContext();
@@ -101,23 +99,15 @@ public class GraphActivity extends AppCompatActivity {
     }
 
 
-    //TODO: Suyash
     //parse data received from server to send to generateGraphs (will need to add args)
-    // hi suyash, content is the data received from server as a string
     public void parseDatafromServer(String address) {
-        //String data = getDataFromServer(); //do for last 10 points
         //parse ratios from data
-        System.out.println("HI PARSINGDATA FROM SERVER");
         try {
-            System.out.println("trying");
             JSONArray jArr = new JSONArray(content);
             for (int i=0;i<jArr.length();i++){
-                System.out.println("tryna get a json object");
                 JSONObject currObj = jArr.getJSONObject(i);
                 recData.add(new SpiroData(currObj.toString()));
 
-                System.out.println("hello");
-                //System.out.println(currObj.getDouble("FEV"));
                 FEV.add(currObj.getDouble("FEV"));
                 FVC.add(currObj.getDouble("FVC"));
                 dates.add(Integer.parseInt(currObj.getString("date")));
@@ -129,29 +119,16 @@ public class GraphActivity extends AppCompatActivity {
                 for (int j = 0; j<tagJSON.length(); j++){
                     currentTagList.add(tagJSON.getString(j));
                 }
-
                 tagArray.add(currentTagList);
 
                 JSONArray dataJSON = currObj.getJSONArray("data");
-
             }
-            System.out.println(Arrays.toString(tagArray.toArray()));
-            //System.out.println(FEV);
-            //System.out.println(FVC);
-            //System.out.println(dates);
-            //FVC and FEV are arraylists with the data
-
-            //System.out.println("Stuff: "+jArr.getJSONObject(0).getString("date"));
-
         } catch (JSONException e) {
             e.printStackTrace();
-            System.out.println("caught");
         }
         if (FEV.size()!=0) {
             generateGraphs(FEV, FVC);
-            System.out.println("tryna update UI");
             updateUI();
-            System.out.println("updated UI");
         }
 
     }
@@ -166,9 +143,6 @@ public class GraphActivity extends AppCompatActivity {
         Double fev1Val = round(FEV.get(FEV.size()-1), 2);
         Double fvcVal = round(FVC.get(FVC.size()-1), 2);
         String dateVal = dateToString(dates.get(dates.size()-1));
-
-        System.out.println(Arrays.toString(FEV.toArray()));
-        System.out.println(Arrays.toString(FVC.toArray()));
 
         String fevText = "FEV1: " + Double.toString(fev1Val);
         String fvcText = "FVC: " + Double.toString(fvcVal);
@@ -202,7 +176,6 @@ public class GraphActivity extends AppCompatActivity {
     //TODO: Amy
     //Method to get data from server
     public void getDataFromServer() {
-        System.out.println("Get data from server");
         ConnectivityManager connectivityManager = (ConnectivityManager)
                 getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
@@ -210,7 +183,7 @@ public class GraphActivity extends AppCompatActivity {
             new getInfoTask().execute(username);
         } else {
             // error
-            System.out.println("no connection :(");
+            System.out.println("No connection.");
         }
 
     }
@@ -242,7 +215,6 @@ public class GraphActivity extends AppCompatActivity {
         try {
 
             String urlToUse = URL + "/data";
-            System.out.println(urlToUse);
             URL url = new URL(urlToUse);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setDoInput(true);
@@ -261,15 +233,11 @@ public class GraphActivity extends AppCompatActivity {
             StringBuilder buf = new StringBuilder();
             int a;
             while((a = is.read()) != -1) {
-                //contentAsString = contentAsString + (char) a;
                 buf.append((char)a);
-                //System.out.println("loop");
             }
 
             content = buf.toString();
             System.out.println("content:"+content);
-
-
 
             System.out.println(contentAsString);
             return true;
@@ -285,7 +253,6 @@ public class GraphActivity extends AppCompatActivity {
         List<Double> ratio = new ArrayList<Double>();
         for (int i = 0; i < FEV.size(); i++) {
             double r = 100*FEV.get(i)/FVC.get(i);
-            System.out.println(r);
             ratio.add(r);
         }
 
@@ -302,9 +269,6 @@ public class GraphActivity extends AppCompatActivity {
             if (tagArray.size()>0) tagMap.put(dates.get(i), tagArray.get(i));
         }
 
-        System.out.print("number of dates: ");
-        System.out.println(dates.size());
-        System.out.println(Arrays.toString(dates.toArray()));
         lineSeries.setDrawDataPoints(true);
         lineSeries.setDataPointsRadius(5);
         lineGraph.addSeries(lineSeries);
@@ -315,23 +279,18 @@ public class GraphActivity extends AppCompatActivity {
                 if (tagArray.size()>0) {
                     List<String> tags = tagMap.get((int) dataPointInterface.getX());
                     if (tags != null && tags.size() > 0) {
-                        System.out.println(Arrays.toString(tags.toArray()));
                         StringBuilder t = new StringBuilder();
                         for (int i = 0; i < tags.size(); i++) {
-                            System.out.println(tags.get(i));
                             t.append(tags.get(i));
                             if (i < tags.size()-1) {
                                 t.append(", ");
                             }
-                            System.out.println(t.toString());
-                            System.out.println(t.length());
                         }
                         if (t.length() > 0) {
                             Toast.makeText(context, (CharSequence) (round(dataPointInterface.getY(), 2) + "% - " + t.toString()), Toast.LENGTH_LONG).show();
                         } else {
                             Toast.makeText(context, (CharSequence) (round(dataPointInterface.getY(), 2) + "% - no tags"), Toast.LENGTH_LONG).show();
                         }
-                        System.out.println(dataPointInterface.getX());
                     }
                 }
                 else{
@@ -343,7 +302,6 @@ public class GraphActivity extends AppCompatActivity {
         Viewport viewport = lineGraph.getViewport();
 
         Locale l = new Locale("en", "US");
-        //final java.text.DateFormat dateTimeFormatter = DateFormat.getDateFormat(this);
         final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd\nHH:mm");
         lineGraph.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
             @Override
@@ -374,8 +332,7 @@ public class GraphActivity extends AppCompatActivity {
 
         viewport.setScrollable(true);
 
-
-        // bar graph
+        // flow rate graph
         GraphView flowGraph = (GraphView) findViewById(R.id.barGraph);
         List<Double> currentData = recData.get(recData.size()-1).data;
         LineGraphSeries<DataPoint> flowSeries = new LineGraphSeries<DataPoint>(new DataPoint[] {
@@ -387,17 +344,6 @@ public class GraphActivity extends AppCompatActivity {
         }
 
         flowGraph.addSeries(flowSeries);
-/*
-        Viewport viewport2 = flowGraph.getViewport();
-        viewport2.setXAxisBoundsManual(true);
-        viewport2.setMinX(0);
-        viewport2.setMaxX(50);
-        viewport2.setYAxisBoundsManual(true);
-        viewport2.setMinY(0);
-        viewport2.setMaxY(1.2);
-
-        viewport2.setScrollable(true);
-*/
         flowGraph.getGridLabelRenderer().setHorizontalAxisTitle("Time (s)");
         flowGraph.getGridLabelRenderer().setVerticalAxisTitle("Flow Rate (L/s)");
 
@@ -409,7 +355,5 @@ public class GraphActivity extends AppCompatActivity {
         intent.putExtra("username", username);
         startActivity(intent);
     }
-
-
 
 }
