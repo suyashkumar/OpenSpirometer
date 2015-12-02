@@ -94,7 +94,7 @@ public class ResultsActivity extends AppCompatActivity {
 
         FEVText.setText(Double.toString(fev1Val));
         FVCText.setText(Double.toString(fvcVal));
-        ratioText.setText(String.valueOf(ratio));
+        ratioText.setText(String.valueOf(ratio) + "%");
 
         if(ratio < 70) {
             TextView warning = (TextView) findViewById(R.id.warning);

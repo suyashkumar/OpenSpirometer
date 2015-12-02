@@ -145,7 +145,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="WARNING: Your FEV/FVC ratio is a little low!"
         android:id="@+id/warning"
-        android:visibility="visible"
+        android:visibility="invisible"
         android:gravity="center"
         android:layout_above="@+id/normal"
         android:layout_centerHorizontal="true"

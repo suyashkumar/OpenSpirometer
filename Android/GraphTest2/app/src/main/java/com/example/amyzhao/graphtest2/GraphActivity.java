@@ -318,8 +318,8 @@ public class GraphActivity extends AppCompatActivity {
         lineGraph.getGridLabelRenderer().setVerticalAxisTitle("FEV1/FVC (%)");
         lineGraph.getGridLabelRenderer().setLabelHorizontalHeight(40);
 
-        double prev_hour = viewport.getMaxX(true) - (viewport.getMaxX(true) % 900);
-        double next_hour = prev_hour + 900;
+        double next_hour = viewport.getMaxX(true) - (viewport.getMaxX(true) % 300) + 300;
+        double prev_hour = next_hour-2700;
 
         viewport.setXAxisBoundsManual(true);
         viewport.setMinX(prev_hour);

@@ -63,6 +63,7 @@ public class RecordActivity extends AppCompatActivity {
         Bundle extra = getIntent().getExtras();
         username = extra.getString("username");
         URL = "http://spiro.suyash.io/api/" + username;
+        content="";
 
         receivedData =new StringBuffer();
         Button openButton = (Button)findViewById(R.id.connect);
@@ -141,18 +142,15 @@ public class RecordActivity extends AppCompatActivity {
         final Handler handler = new Handler();
         final byte delimiter = 10; //This is the ASCII code for a newline character
 
-        System.out.println("beginning to listen for data");
         stopWorker = false;
         readBufferPosition = 0;
         readBuffer = new byte[4096];
         workerThread = new Thread(new Runnable() {
             public void run() {
-                System.out.println("starting worker");
                 while(!Thread.currentThread().isInterrupted() && !stopWorker) {
                     try {
                         int bytesAvailable = mmInputStream.available();
                         if(bytesAvailable > 0) {
-                            System.out.println("bytes are available");
                             byte[] packetBytes = new byte[bytesAvailable];
                             mmInputStream.read(packetBytes);
                             for(int i=0;i<bytesAvailable;i++) {
@@ -171,9 +169,6 @@ public class RecordActivity extends AppCompatActivity {
 
                                             String[] tags = getTags();
                                             int[] parsedData = parseData(data.toString());
-                                            System.out.println("testing from thread");
-                                            System.out.println(Arrays.toString(tags));
-                                            System.out.println(Arrays.toString(parsedData));
                                             calculateAndSend(parsedData, tags);
                                         }
                                     });
@@ -200,11 +195,9 @@ public class RecordActivity extends AppCompatActivity {
         String tagString = tagText.getText().toString();
         String[] tags =tagString.split("\\s*,\\s*");
         System.out.println("getTags result:");
-        System.out.println(Arrays.toString(tags));
         return tags;
     }
 
-    //TODO: Suyash
     public void record(View view){
         //Bluetooth async task
         //on post-execute:
@@ -212,13 +205,9 @@ public class RecordActivity extends AppCompatActivity {
 
         try {
             mmOutputStream.write('0');
-            System.out.println("wrote");
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("caught");
         }
-
-        System.out.println("listening from record");
         beginListenForData();
     }
 
@@ -231,8 +220,6 @@ public class RecordActivity extends AppCompatActivity {
             ret[j] = Integer.parseInt(parsed[j]);
         }
 
-        System.out.println("parseData result:");
-        System.out.println(Arrays.toString(ret));
         return ret;
     }
 
@@ -280,8 +267,6 @@ public class RecordActivity extends AppCompatActivity {
         System.out.println(fvcString);
         System.out.println(Arrays.toString(tags));
 
-       //TODO: Suyash change content to actual thing
-        String data = "blabla";
        content = currentDataObject.toJSONString();
        System.out.println("JSON POST String: "+content);
        postDataToServer();
@@ -348,7 +333,15 @@ public class RecordActivity extends AppCompatActivity {
             out.flush();
             out.close();
 
-            InputStream is = con.getInputStream();
+            int status = con.getResponseCode();
+            InputStream is=null;
+            if (status >= 400 ) {
+                System.out.println("No input stream.");
+                postInfo();
+            } else {
+                is = con.getInputStream();;
+            }
+
             BufferedReader rd = new BufferedReader(new InputStreamReader(is));
             String line;
             StringBuffer response = new StringBuffer();
