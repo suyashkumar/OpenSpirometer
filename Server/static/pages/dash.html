@@ -1,9 +1,29 @@
 <div class="row">
 	<div class="well text-center col-md-12"> <h2> OpenSpiro Dashboard: {{username}}</h2></div> 
 </div>
-<div class="row"> 
-	<div id="mainGraph" class="well text-center col-md-offset-3 col-md-6" style="width:700px;height:320px;">
+<div class="row">
+	<div class="col-md-3">
+		<table class="table-bordered table table-hover"> 
+			<tr> 
+				<td>Date</td>
+				<td>FEV/FVC</td>
+			</tr>	
+		</table>
+		<div style="height:400px;overflow:auto"> 
+			<table class="record-table table table-hover table-bordered"> 
+				<tr ng-repeat="item in spiroData track by $index" >
+					<td>{{item.date}}</td>
+					<td>{{item.ratio}}</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+
+	
+	<div id="mainGraph" class="well text-center col-md-6" style="height:400px">
+		<h2>FEV/FVC</h2>
 		<div class="text-center"><svg></svg></div>
+	</div>
 	</div>
 </div>
 

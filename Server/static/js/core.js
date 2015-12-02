@@ -26,12 +26,17 @@ spiroApp.controller("mainController", function($scope,$http,user){
 		user.setUser($scope.username);
 		window.location='#/dash'
 	} 
- });
+ }); 
 spiroApp.controller("dashboardController", function($scope, $http, user){
 	$scope.username=user.getUser();	
 	$http.get('/api/'+$scope.username+"/data").success(function(data){
 		// Get data
 	makeOverviewGraph(data);
+	$scope.spiroData=[];
+	for (i=0;i<data.length;i++){
+		var t = new Date (parseInt(data[i].date)*1000); 
+		$scope.spiroData.push({date: t.getMonth().toString()+"/"+t.getDate().toString()+"/"+t.getFullYear().toString(), ratio: (data[i].FEV/data[i].FVC).toFixed(3)});
+	}
 	});
 });
 
@@ -53,14 +58,12 @@ var makeOverviewGraph = function(data) {
                 .showXAxis(true)        //Show the x-axis
   ;
 
-
-
-
-
-
   /* Done setting the chart up? Time to render it!*/
   
-
+	
+  chart.xAxis.axisLabel('Date (unix)');
+  chart.yAxis.axisLabel('FEV/FVC');
+  chart.height(300);
   d3.select('#mainGraph svg')    //Select the <svg> element you want to render the chart in.   
       .datum([graphData])         //Populate the <svg> element with chart data...
       .call(chart);          //Finally, render the chart!
