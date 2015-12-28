@@ -30,7 +30,7 @@ spiroApp.controller("dashboardController", function($scope, $http, $routeParams)
 	$scope.spiroData=[];
 	for (i=0;i<data.length;i++){
 		var t = new Date (parseInt(data[i].date)*1000); 
-		$scope.spiroData.push({date: t.getMonth().toString()+"/"+t.getDate().toString()+"/"+t.getFullYear().toString(), ratio: (data[i].FEV/data[i].FVC).toFixed(3)});
+		$scope.spiroData.push({date: t.getMonth().toString()+"/"+t.getDate().toString()+"/"+t.getFullYear().toString(), ratio: (data[i].FEV/data[i].FVC).toFixed(3), tags: data[i].params.tags.toString()}); 
 	}
 	});
 });
