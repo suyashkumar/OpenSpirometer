@@ -5,30 +5,24 @@ spiroApp.config(function($routeProvider){
 		templateUrl : 'pages/home.html',
 		controller : 'mainController'
 	});
-	$routeProvider.when('/dash',{
+	$routeProvider.when('/dash/:user',{
 		templateUrl: 'pages/dash.html',
 		controller : 'dashboardController'
 	});
 
 });
-spiroApp.service('user', function(){
-	var user='';
-	return {
-		getUser: function(){return user},
-		setUser: function(value){user=value}
-	}
-});
+
+
 
 // Set up Controllers:
-spiroApp.controller("mainController", function($scope,$http,user){ 
+spiroApp.controller("mainController", function($scope,$http){
 	$scope.goToDash = function(){
-		console.log("user: "+$scope.username);
-		user.setUser($scope.username);
-		window.location='#/dash'
+		console.log("user: "+$scope.username); 
+		window.location='#/dash/'+$scope.username;
 	} 
  }); 
-spiroApp.controller("dashboardController", function($scope, $http, user){
-	$scope.username=user.getUser();	
+spiroApp.controller("dashboardController", function($scope, $http, $routeParams){
+	$scope.username=$routeParams.user;
 	if ($scope.username=="") window.location='#/';
 	$http.get('/api/'+$scope.username+"/data").success(function(data){
 		// Get data
