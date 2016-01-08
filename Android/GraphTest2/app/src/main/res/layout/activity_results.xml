@@ -83,7 +83,7 @@
         android:layout_above="@+id/FEVlabel"
         android:textStyle="bold"
         android:textSize="40dp"
-        android:layout_toEndOf="@+id/warning" />
+        android:layout_toEndOf="@+id/resultsText" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -146,7 +146,9 @@
         android:text="WARNING: Your FEV/FVC ratio is a little low!"
         android:id="@+id/warning"
         android:visibility="invisible"
-        android:layout_below="@+id/resultsText"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:layout_above="@+id/normal"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="57dp" />
 
 </RelativeLayout>

@@ -49,23 +49,8 @@ public class ResultsActivity extends AppCompatActivity {
         FEV = extra.getDouble("FEV");
         FVC = extra.getDouble("FVC");
         ratio = FEV/FVC*100;
-        System.out.println(username);
         URL = "http://spiro.suyash.io/api/" + username;
-        System.out.println(URL);
         updateUI();
-        //getDataFromServer();
-
-
-    //time stuff--probably better way?
-//        Calendar c = Calendar.getInstance();
-//        Date time = c.getTime();
-//        int date = c.get(Calendar.DAY_OF_MONTH);
-//        int year = c.get(Calendar.YEAR);
-//        int month = c.get(Calendar.MONTH);
-//        int hour = c.get(Calendar.HOUR_OF_DAY);
-//        int minutes = c.get(Calendar.MINUTE);
-
-
     }
 
     @Override
@@ -90,10 +75,8 @@ public class ResultsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    //TODO: Suyash
     //Parse data received from server to get ratio, FVC, FEV
     public void parseDatafromServer(String address) {
-        //parse ratio, FVC, FEV from data
         double ratio=0;
         double FVC=0;
         double FEV=0;
@@ -111,7 +94,7 @@ public class ResultsActivity extends AppCompatActivity {
 
         FEVText.setText(Double.toString(fev1Val));
         FVCText.setText(Double.toString(fvcVal));
-        ratioText.setText(String.valueOf(ratio));
+        ratioText.setText(String.valueOf(ratio) + "%");
 
         if(ratio < 70) {
             TextView warning = (TextView) findViewById(R.id.warning);

@@ -13,10 +13,10 @@ var app     		= express();
 var bodyParser		= require('body-parser');
 var mongoose        = require('mongoose'); 
 
+
 // Load external modules
 var db = require('./config/db'); // Load database path/configuration
 var port=process.env.PORT || 8080; // Set the port this application is going to run on
-
 // Init modules and app
 mongoose.connect(db.url); // Connect to database
 app.use(bodyParser.json()); // Set up body parser

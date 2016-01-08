@@ -1,0 +1,2 @@
+# OpenSpirometer
+OpenSpiro is a Bluetooth spirometer that relays data to an Android app on a paired device. The app displays clinical parameters (such as FEV/FVC ratios) over time and in relation to certain tags such as "pollen" (which can be helpful in discovering asthma triggers). All data is automatically stored in the cloud and is accessible via a cloud interface. All electronics, firmware, Android app, server/frontend built by the team can be found here. 
