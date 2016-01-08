@@ -1,28 +1,29 @@
-
+/*
+ * routes.js
+ * This module sets up and implements all routes for this webserver.
+ * @author: Suyash Kumar
+ */
 var routing = function (app,mongoose){
+	// Load mongoose database schemas: 
 	var spiroTest 	= require('./models/spiroTest')(mongoose); 
 	var User		= require('./models/User')(mongoose);		
-	// Server routes: 
-	// API
-	
-	app.get('/one',function(req,res){
 
-		res.send("Boom");
-	});
+	// BEGIN routes: 	
+
 	/*
 	 *	POST /api/:user/pushData
 	 *	Adds POST'd object to the given user's tests array. If new user, creates new user and does the same. 
 	 */
-	app.post('/api/:user/pushData',function(req,res){
-		console.log("Post data for user " + req.params.user);
-		console.log(req.body); 
+	app.post('/api/:user/pushData',function(req,res){ 
+		// Find the user and add the posted data to that user's test array
 		User.findOne({name:req.params.user}, function(err,currUser){
 			if(err){
+				res.json(err);
 				throw err;
 			}
 			if(!currUser){
-				console.log("Adding new user");
-			
+				// Current user does not exist
+				console.log("Adding new user"); 
 				currUser = User({
 					name:req.params.user,
 					tests:[]
@@ -31,33 +32,35 @@ var routing = function (app,mongoose){
 				currUser.save();
 			}
 			else{
+				// Append data to user's array of test data
 				currUser.tests.push(req.body);
-				currUser.save();
+				currUser.save(); // save the User to the database
 			}
 		});	
 		res.send("OK");
 	});
-
-	app.get('/users',function(req,res){
+	/*
+	 * GET /api/users
+	 * Returns all users and their data (essentially database dump). Mostly for debug.
+	 */
+	app.get('/api/users',function(req,res){
 		User.find({},function(err,data){
 			if (err) throw err;
-			console.log(data);
-			console.log("hi");
+			console.log(data); 
 			res.json(data);
-			});
+		});
 
 	});
+
 	/*
 	 * GET /api/:user/data
 	 * Returns all data for the given user (all data under the tests array)
 	 */
 	app.get('/api/:user/data',function(req, res){
-		User.findOne({name:req.params.user}, function(err, currUser){
-			console.log(currUser);
+		User.findOne({name:req.params.user}, function(err, currUser){ 
 			if (currUser){ 
 				console.log(currUser);
 				res.json(currUser.tests);	
-				
 			}
 			else{
 				res.send("Not a user.");
@@ -66,4 +69,4 @@ var routing = function (app,mongoose){
 	});
 
 }
-module.exports = routing; // Expose routing funciton
+module.exports = routing; // Expose routing set up funciton

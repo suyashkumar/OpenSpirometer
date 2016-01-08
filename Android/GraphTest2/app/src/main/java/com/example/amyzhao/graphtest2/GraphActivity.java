@@ -159,8 +159,8 @@ public class GraphActivity extends AppCompatActivity {
     public void updateUI() {
         TextView fev1 = (TextView) findViewById(R.id.fev1Recent);
         TextView fvc = (TextView) findViewById(R.id.fvcRecent);
-        TextView fev1norm = (TextView) findViewById(R.id.fev1Normal);
-        TextView fvcnorm = (TextView) findViewById(R.id.fvcNormal);
+        //TextView fev1norm = (TextView) findViewById(R.id.fev1Normal);
+        //TextView fvcnorm = (TextView) findViewById(R.id.fvcNormal);
         TextView date = (TextView) findViewById(R.id.date);
 
         Double fev1Val = round(FEV.get(FEV.size()-1), 2);
@@ -178,8 +178,8 @@ public class GraphActivity extends AppCompatActivity {
 
         fev1.setText(fevText + " L");
         fvc.setText(fvcText + " L");
-        fev1norm.setText(fevNormText);
-        fvcnorm.setText(fvcNormText);
+        //fev1norm.setText(fevNormText);
+        //fvcnorm.setText(fvcNormText);
         date.setText(dateText);
     }
 

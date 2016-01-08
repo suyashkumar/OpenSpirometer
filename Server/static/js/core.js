@@ -1,3 +1,8 @@
+/*
+ * core.js
+ * Angular application for the front end web application.
+ * @author: Suyash Kumar
+ */
 var spiroApp = angular.module('spiroapp', ['ngRoute']);
 
 spiroApp.config(function($routeProvider){

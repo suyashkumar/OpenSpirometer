@@ -9,15 +9,16 @@
 
     <com.jjoe64.graphview.GraphView
         android:layout_width="match_parent"
-        android:layout_height="175dip"
+        android:layout_height="140dip"
         android:id="@+id/barGraph"
-        android:layout_marginTop="150dp"
-        android:layout_below="@+id/fev1Normal"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="false"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_above="@+id/lineTitle" />
 
     <com.jjoe64.graphview.GraphView
         android:layout_width="match_parent"
-        android:layout_height="340dip"
+        android:layout_height="140dip"
         android:id="@+id/lineGraph"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true" />
@@ -27,9 +28,9 @@
         android:layout_height="wrap_content"
         android:text="Most Recent Results:"
         android:id="@+id/results"
-        android:layout_above="@+id/barGraph"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:layout_below="@+id/date"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="10dp" />
 
     <Button
         android:layout_width="wrap_content"
@@ -46,8 +47,9 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="FEV1: "
         android:id="@+id/fev1Recent"
-        android:layout_above="@+id/barGraph"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/results" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -57,45 +59,15 @@
         android:id="@+id/fvcRecent"
         android:layout_below="@+id/fev1Recent"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="39dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="FEV1 (Normal Range): "
-        android:id="@+id/fev1Normal"
-        android:layout_below="@+id/recordButton"
-        android:layout_toStartOf="@+id/recordButton" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="FVC (Normal Range):"
-        android:id="@+id/fvcNormal"
-        android:layout_alignTop="@+id/fvcRecent"
-        android:layout_alignStart="@+id/fev1Normal" />
+        android:layout_marginTop="10dp"
+        android:layout_alignParentEnd="false" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Date: "
         android:id="@+id/date"
-        android:layout_alignParentStart="true"
-        android:layout_above="@+id/fev1Normal" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Flow Rate vs. Time for Most Recent Measurement"
-        android:id="@+id/barTitle"
-        android:layout_marginTop="43dp"
-        android:layout_below="@+id/fvcNormal"
-        android:layout_toEndOf="@+id/fvcRecent"
-        android:gravity="center"
-        android:textAlignment="center" />
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -105,6 +77,15 @@
         android:id="@+id/lineTitle"
         android:layout_above="@+id/lineGraph"
         android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Most Recent Flow Rate"
+        android:id="@+id/textView2"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/barGraph" />
 
 
 </RelativeLayout>
